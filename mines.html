@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Mines Game</title>
+  <style>
+    /* Reset */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a2342, #1a3c66);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      background-image: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80' ); /* Fond galactique */
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    /* Glass card container */
+    .container {
+      background: rgba(255 255 255 / 0.12);
+      border-radius: 20px;
+      box-shadow:
+        0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255 255 255 / 0.18);
+      padding: 30px 40px;
+      width: 350px;
+      max-width: 90vw;
+      user-select: none;
+      transition: box-shadow 0.3s ease;
+    }
+    .container:hover {
+      box-shadow:
+        0 15px 45px 0 rgba(31, 38, 135, 0.5);
+    }
+
+    /* Title animations */
+    .title h1 {
+      font-size: 3.2rem;
+      color: #ffd700;
+      margin: 10px 0 10px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+    .title h1 span {
+      display: inline-block;
+      animation: fadeInUp 0.8s forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    /* Stagger animations on each letter */
+    .title h1 span:nth-child(1) { animation-delay: 0.1s; }
+    .title h1 span:nth-child(2) { animation-delay: 0.2s; }
+    .title h1 span:nth-child(3) { animation-delay: 0.3s; }
+    .title h1 span:nth-child(4) { animation-delay: 0.4s; }
+    .title h1 span:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2#author {
+      font-weight: 600;
+      color: #ffdd55;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 1.15rem;
+      font-style: italic;
+      user-select: none;
+      letter-spacing: 0.06em;
+    }
+
+    /* Grid styles */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-gap: 8px;
+      justify-content: center;
+      width: 300px;
+      height: 300px;
+      padding: 12px;
+      border-radius: 15px;
+      background: rgba(255 255 255 / 0.15);
+      box-shadow: 0 4px 20px rgba(255 255 255 / 0.1);
+      user-select: none;
+      margin: 0 auto 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .square {
+      background-color: #007aff;
+      border-radius: 10px;
+      font-size: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      width: 52px;
+      height: 52px;
+      transition:
+        background-color 0.35s ease,
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.3s ease;
+      box-shadow: 0 3px 6px rgba(0, 122, 255, 0.6);
+      user-select: none;
+      color: white;
+      text-shadow:
+        0 1px 1px rgba(0,0,0,0.3);
+    }
+    .square:hover:not(.star) {
+      transform: scale(1.1);
+      box-shadow:
+        0 6px 12px rgba(0, 122, 255, 0.85);
+      background-color: #005bbb;
+    }
+
+    .square.star {
+      background-color: transparent !important;
+      color: #ffd700;
+      filter: drop-shadow(0 0 5px gold);
+      animation: starPop 0.5s ease forwards;
+      cursor: default;
+      box-shadow: none;
+      user-select: none;
+    }
+
+    @keyframes starPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-180deg);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(10deg);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 10px;
+    }
+
+    #numberOfTrapsLabel {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 4px rgba(0,0,0,0.6);
+      user-select: none;
+      margin-bottom: 5px;
+    }
+
+    .trap-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      gap: 15px;
+    }
+
+    .trap-control button {
+      background: rgba(255 255 255 / 0.25);
+      border: none;
+      width: 45px;
+      height: 45px;
+      font-size: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: 700;
+      color: #007aff;
+      box-shadow:
+        0 4px 6px rgba(0, 122, 255, 0.5);
+      transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        box-shadow 0.3s ease,
+        transform 0.2s ease;
+    }
+    .trap-control button:hover {
+      background: rgba(255 255 255 / 0.45);
+      color: #004a9f;
+      box-shadow:
+        0 8px 14px rgba(0, 74, 159, 0.7);
+      transform: translateY(-2px);
+    }
+     .trap-control button:active {
+      transform: translateY(1px);
+    }
+
+    #traps {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 5px rgba(255 215, 0, 0.8);
+      user-select: none;
+      min-width: 40px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    /* Buttons group */
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      user-select: none;
+    }
+
+    #get-signal, #go-back {
+      flex: 1;
+      padding: 14px 0;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 15px;
+      border: none;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 6px 12px rgba(0, 122, 255, 0.4);
+      transition:
+        background-color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.15s ease;
+      font-family: inherit;
+    }
+
+    #get-signal {
+      background: linear-gradient(135deg, #34c759, #30a14e);
+      color: white;
+      box-shadow:
+        0 8px 20px rgba(52, 199, 89, 0.6);
+    }
+    #get-signal:hover:not(:disabled) {
+      background: linear-gradient(135deg, #28a745, #218838);
+      box-shadow:
+        0 12px 30px rgba(33, 136, 56, 0.75);
+      transform: scale(1.05) translateY(-2px);
+    }
+     #get-signal:active:not(:disabled) {
+      transform: scale(1.02) translateY(0);
+    }
+    #get-signal:disabled {
+      background: #8dd69e;
+      cursor: not-allowed;
+      box-shadow: none;
+      color: #d6e8d6;
+    }
+
+    #go-back {
+      background: linear-gradient(135deg, #ff3b30, #bf2b21);
+      color: white;
+      box-shadow:
+        0 8px 20px rgba(255, 59, 48, 0.6);
+    }
+    #go-back:hover {
+      background: linear-gradient(135deg, #bf2b21, #801a11);
+      box-shadow:
+        0 12px 30px rgba(128, 26, 17, 0.75);
+      transform: scale(1.05) translateY(-2px);
+    }
+     #go-back:active {
+      transform: scale(1.02) translateY(0);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 480px) {
+      .container {
+        width: 90vw;
+        padding: 25px 20px;
+      }
+
+      .title h1 {
+        font-size: 2.6rem;
+        gap: 5px;
+      }
+
+      h2#author {
+        font-size: 1rem;
+        margin-bottom: 15px;
+      }
+
+      .game-grid {
+        width: 260px;
+        height: 260px;
+        grid-gap: 6px;
+      }
+
+      .square {
+        width: 46px;
+        height: 46px;
+        font-size: 24px;
+      }
+
+      #get-signal, #go-back {
+        font-size: 16px;
+        padding: 12px 0;
+      }
+
+      .trap-control button {
+        width: 38px;
+        height: 38px;
+        font-size: 22px;
+      }
+
+      #traps {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Mines Game container">
+    <div class="title" aria-label="Game Title">
+      <h1 aria-level="1" role="heading">
+        <span>M</span>
+        <span>I</span>
+        <span>N</span>
+        <span>E</span>
+        <span>S</span>
+      </h1>
+      <h2 id="author" aria-level="2" role="heading">ROVAS SOFT</h2>
+    </div>
+    <div class="game-grid" role="grid" aria-label="Game grid with squares">
+      <div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div>
+      <div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div>
+      <div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div>
+      <div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div>
+      <div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div><div class="square" role="gridcell" tabindex="0"></div>
+    </div>
+    <div class="controls" role="region" aria-label="Game controls">
+      <p id="numberOfTrapsLabel" aria-live="polite" aria-atomic="true"></p>
+      <div class="trap-control" role="group" aria-label="Trap controls">
+        <button id="decrease-traps" aria-label="Decrease number of traps">−</button>
+        <span id="traps" aria-live="polite" aria-atomic="true">1</span>
+        <button id="increase-traps" aria-label="Increase number of traps">+</button>
+      </div>
+      <div class="button-group">
+        <button id="go-back" onclick="goBack()" aria-label="Go back to main page">⬅</button>
+        <button id="get-signal" aria-label="Get signal">GET SIGNAL</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function goBack() {
+      window.location.href = 'index.html';
+    }
+
+    function getLanguage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let lang = urlParams.get('lang');
+      if (!lang) {
+        lang = localStorage.getItem('selectedLanguage') || 'en';
+      } else {
+        localStorage.setItem('selectedLanguage', lang);
+      }
+      return lang;
+    }
+
+    const currentLanguage = getLanguage();
+
+    const translations = {
+      ru: {
+        title: "МИНЫ",
+        author: "ROVAS SOFT",
+        trapsLabel: "КОЛИЧЕСТВО ЛОВУШЕК",
+        traps: 1,
+        increaseTraps: 2,
+        decreaseTraps: 2,
+        getSignal: "ПОЛУЧИТЬ СИГНАЛ"
+      },
+      en: {
+        title: "MINES",
+        author: "ROVAS SOFT",
+        trapsLabel: "NUMBER OF TRAPS",
+        traps: 1,
+        increaseTraps: 2,
+        decreaseTraps: 2,
+        getSignal: "GET SIGNAL"
+      },
+      fr: {
+        title: "MINES",
+        author: "ROVAS SOFT",
+        trapsLabel: "NOMBRE DE PIÈGES",
+        traps: 1,
+        increaseTraps: 2,
+        decreaseTraps: 2,
+        getSignal: "OBTENIR UN SIGNAL"
+      },
+      hi: {
+        title: "माइनस",
+        author: "ROVAS SOFT",
+        trapsLabel: "फंदों की संख्या",
+        traps: 1,
+        increaseTraps: 2,
+        decreaseTraps: 2,
+        getSignal: "सिग्नल प्राप्त करें"
+      }
+    };
+
+    function applyTranslations() {
+      const translation = translations[currentLanguage];
+      document.getElementById('author').textContent = translation.author;
+      document.getElementById('numberOfTrapsLabel').textContent = translation.trapsLabel;
+      document.getElementById('get-signal').textContent = translation.getSignal;
+      document.getElementById('traps').textContent = translation.traps;
+      document.title = translation.title;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      applyTranslations();
+      const trapsElement = document.getElementById('traps');
+      const decreaseTrapsBtn = document.getElementById('decrease-traps');
+      const increaseTrapsBtn = document.getElementById('increase-traps');
+      const getSignalBtn = document.getElementById('get-signal');
+      const squares = document.querySelectorAll('.square');
+
+      let numberOfTraps = 1;
+      let isAnimating = false;
+
+      function updateTrapsDisplay() {
+        trapsElement.textContent = numberOfTraps;
+      }
+
+      decreaseTrapsBtn.addEventListener('click', function () {
+        if (numberOfTraps > 1) {
+          numberOfTraps -= 2;
+          updateTrapsDisplay();
+        }
+      });
+
+      increaseTrapsBtn.addEventListener('click', function () {
+        if (numberOfTraps < 7) {
+          numberOfTraps += 2;
+          updateTrapsDisplay();
+        }
+      });
+
+      function resetGrid() {
+        squares.forEach(square => {
+          square.textContent = '';
+          square.classList.remove('star');
+          square.style.backgroundColor = '#007aff';
+        });
+      }
+
+      function replaceSquaresWithStars() {
+        getSignalBtn.disabled = true;
+        isAnimating = true;
+
+        resetGrid();
+
+        let squaresToReplace = 16;
+        if (numberOfTraps === 3) {
+          squaresToReplace = 6;
+        } else if (numberOfTraps === 5) {
+          squaresToReplace = 5;
+        } else if (numberOfTraps === 7) {
+          squaresToReplace = 4;
+        }
+
+        let availableSquares = [...squares];
+        let replacedCount = 0;
+
+        const interval = setInterval(() => {
+          if (replacedCount < squaresToReplace && availableSquares.length > 0) {
+            const randomIndex = Math.floor(Math.random() * availableSquares.length);
+            const square = availableSquares[randomIndex];
+
+            square.textContent = '⭐';
+            square.classList.add('star');
+            square.style.backgroundColor = 'transparent';
+
+            availableSquares.splice(randomIndex, 1);
+
+            replacedCount++;
+          } else {
+            clearInterval(interval);
+            isAnimating = false;
+            getSignalBtn.disabled = false;
+          }
+        }, 200); // Animation plus rapide
+      }
+
+      getSignalBtn.addEventListener('click', function () {
+        if (!isAnimating) {
+          replaceSquaresWithStars();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

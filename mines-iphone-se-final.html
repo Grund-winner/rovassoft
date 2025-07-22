@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>1win x MINES - Galactic Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-color: #0c0a1f;
+      --grid-bg: rgba(20, 16, 48, 0.8);
+      --text-color: #e0e0ff;
+      --button-bg: #8e44ad;
+      --button-hover: #9b59b6;
+      --control-bg: #1c163c;
+      --cell-size: 52px;
+      --gap-size: 4px;
+      --glow-color-1: #3a7bd5;
+      --glow-color-2: #00d2ff;
+      --star-color: #00d2ff;
+      --safe-area-inset-top: env(safe-area-inset-top);
+      --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* Verrouillage orientation portrait pour iPhone SE */
+    @media screen and (orientation: landscape) and (max-width: 667px) {
+      body::before {
+        content: "Veuillez tourner votre appareil en mode portrait";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        font-size: 18px;
+        text-align: center;
+        padding: 20px;
+        font-family: 'Orbitron', sans-serif;
+        color: var(--text-color);
+      }
+      
+      body > *:not(::before) {
+        display: none;
+      }
+    }
+
+    @keyframes move-background {
+      from { background-position: 0 0; }
+      to   { background-position: 5000px 2500px; }
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(ellipse at top, rgba(58, 123, 213, 0.1) 0%, transparent 70%),
+        radial-gradient(ellipse at bottom, rgba(142, 68, 173, 0.1) 0%, transparent 70%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cg fill='%23fff' fill-opacity='0.08'%3E%3Ccircle cx='25' cy='25' r='0.5'/%3E%3Ccircle cx='5' cy='10' r='0.5'/%3E%3Ccircle cx='40' cy='45' r='0.5'/%3E%3Ccircle cx='15' cy='35' r='0.5'/%3E%3Ccircle cx='45' cy='15' r='0.5'/%3E%3C/g%3E%3C/svg%3E");
+      animation: move-background 200s linear infinite;
+      color: var(--text-color);
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      padding: max(var(--safe-area-inset-top), 8px) 8px max(var(--safe-area-inset-bottom), 85px) 8px;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 13px;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    header {
+      margin-bottom: 12px;
+    }
+
+    header img {
+      max-width: 260px;
+      width: 90%;
+      height: auto;
+      margin: 8px auto;
+      display: block;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+    }
+
+    .grid {
+      background-color: var(--grid-bg);
+      padding: 12px;
+      border-radius: 10px;
+      display: grid;
+      grid-template-columns: repeat(5, var(--cell-size));
+      gap: var(--gap-size);
+      justify-content: center;
+      margin: 12px auto;
+      box-shadow: 0 0 20px rgba(0, 210, 255, 0.25), 0 0 30px rgba(58, 123, 213, 0.15);
+      border: 1px solid rgba(58, 123, 213, 0.4);
+      max-width: calc(5 * var(--cell-size) + 4 * var(--gap-size) + 24px);
+      backdrop-filter: blur(5px);
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: inset 0 0 4px #000, 0 0 3px rgba(0, 210, 255, 0.15); }
+      50% { box-shadow: inset 0 0 6px #000, 0 0 6px rgba(0, 210, 255, 0.3); }
+      100% { box-shadow: inset 0 0 4px #000, 0 0 3px rgba(0, 210, 255, 0.15); }
+    }
+
+    .cell {
+      width: var(--cell-size);
+      height: var(--cell-size);
+      background-color: #1a1a2e;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      animation: pulse 2s infinite ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: manipulation;
+    }
+
+    .cell:active {
+      transform: scale(0.95);
+    }
+
+    .cell.open {
+      background-image: none;
+      animation: fadeIn 0.4s ease forwards;
+      box-shadow: 0 0 15px var(--star-color), 0 0 25px var(--glow-color-1);
+    }
+
+    .star-image {
+      width: 50%;
+      height: auto;
+      filter: drop-shadow(0 0 4px #00d2ff);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8) rotate(-10deg); }
+      to   { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    .controls {
+      margin: 15px 0;
+      text-align: center;
+    }
+
+    .control-label {
+      display: block;
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      text-shadow: 0 0 4px var(--glow-color-1);
+    }
+
+    .control-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .round-button {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background-color: var(--control-bg);
+      border: 2px solid var(--glow-color-1);
+      color: var(--text-color);
+      font-size: 22px;
+      cursor: pointer;
+      transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 0 0 6px var(--glow-color-1);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .round-button:active {
+      background-color: #2c264c;
+      box-shadow: 0 0 12px var(--glow-color-1);
+      transform: scale(0.95);
+    }
+
+    .value {
+      font-size: 20px;
+      min-width: 26px;
+      display: inline-block;
+      text-align: center;
+      text-shadow: 0 0 8px var(--glow-color-2);
+      font-weight: bold;
+    }
+
+    #signal {
+      background: linear-gradient(45deg, var(--button-bg), var(--button-hover));
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+      max-width: 280px;
+      margin: 15px auto;
+      display: block;
+      box-shadow: 0 0 12px rgba(142, 68, 173, 0.5), inset 0 0 4px rgba(255,255,255,0.2);
+      border-bottom: 2px solid #6c2a8a;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #signal:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 15px rgba(142, 68, 173, 0.7), inset 0 0 6px rgba(255,255,255,0.3);
+    }
+
+    .back-button {
+      position: fixed;
+      bottom: max(var(--safe-area-inset-bottom), 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(42, 42, 42, 0.9);
+      border: 1px solid #444;
+      border-radius: 10px;
+      padding: 12px 28px;
+      width: calc(100% - 16px);
+      max-width: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .back-button:active {
+      background-color: rgba(51, 51, 51, 0.9);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+    }
+
+    .back-button img {
+      width: 20px;
+      height: 20px;
+      filter: drop-shadow(0 0 4px #fff);
+    }
+
+    /* Optimisations spécifiques iPhone SE (375x667) */
+    @media (max-width: 375px) and (max-height: 667px) {
+      body {
+        padding: max(var(--safe-area-inset-top), 6px) 6px max(var(--safe-area-inset-bottom), 80px) 6px;
+      }
+
+      header img {
+        max-width: 240px;
+        width: 95%;
+        margin: 6px auto;
+      }
+
+      .grid {
+        padding: 10px;
+        margin: 10px auto;
+      }
+
+      .control-label {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .round-button {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+      }
+
+      .value {
+        font-size: 18px;
+        min-width: 24px;
+      }
+
+      #signal {
+        font-size: 15px;
+        padding: 12px 24px;
+        max-width: 260px;
+        margin: 12px auto;
+      }
+
+      .back-button {
+        padding: 10px 24px;
+        max-width: 260px;
+        width: calc(100% - 12px);
+      }
+
+      .controls {
+        margin: 12px 0;
+      }
+    }
+
+    /* Optimisations pour très petits écrans */
+    @media (max-width: 320px) {
+      :root {
+        --cell-size: 48px;
+        --gap-size: 3px;
+      }
+
+      header img {
+        max-width: 220px;
+      }
+
+      .control-label {
+        font-size: 13px;
+      }
+
+      .round-button {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+      }
+
+      .value {
+        font-size: 16px;
+      }
+
+      #signal {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+    }
+
+    /* Amélioration des performances */
+    .cell, .round-button, #signal, .back-button {
+      will-change: transform;
+    }
+
+    /* Réduction des animations pour économiser la batterie */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="./1win x MINES_files/header.png" alt="1win x MINES" />
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="controls">
+    <span class="control-label">NOMBRE DE PIÈGES:</span>
+    <div class="control-buttons">
+      <button class="round-button" id="minus" aria-label="Diminuer le nombre de pièges">−</button>
+      <span class="value" id="trapCount">7</span>
+      <button class="round-button" id="plus" aria-label="Augmenter le nombre de pièges">+</button>
+    </div>
+  </div>
+
+  <button id="signal" aria-label="Obtenir le signal pour révéler les cases sûres">OBTENIR LE SIGNAL</button>
+
+  <a class="back-button" onclick="goBack()" role="button" aria-label="Retourner à la page précédente">
+    <img src="./1win x MINES_files/back.png" alt="Retour" />
+  </a>
+
+  <script>
+    // Désactiver le zoom sur double tap
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+
+    // Prévenir le scroll élastique sur iOS
+    document.body.addEventListener('touchmove', function(e) {
+      if (e.target === document.body) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    const selectedLanguage = localStorage.getItem('selectedLanguage') || 'fr';
+
+    const translations = {
+      trapsLabel: { en: "NUMBER OF TRAPS:", ru: "КОЛ-ВО ЛОВУШЕК:", fr: "NOMBRE DE PIÈGES:", hi: "जालों की संख्या:" },
+      signalButton: { en: "GET SIGNAL", ru: "ПОЛУЧИТЬ СИГНАЛ", fr: "OBTENIR LE SIGNAL", hi: "सिग्नल प्राप्त करें" },
+      backAlt: { en: "Back", ru: "Назад", fr: "Retour", hi: "वापस" },
+      orientationMessage: { 
+        en: "Please rotate your device to portrait mode", 
+        ru: "Пожалуйста, поверните устройство в портретный режим", 
+        fr: "Veuillez tourner votre appareil en mode portrait", 
+        hi: "कृपया अपने डिवाइस को पोर्ट्रेट मोड में घुमाएं" 
+      }
+    };
+
+    document.querySelector('.control-label').textContent = translations.trapsLabel[selectedLanguage];
+    document.getElementById('signal').textContent = translations.signalButton[selectedLanguage];
+    document.querySelector('.back-button img').alt = translations.backAlt[selectedLanguage];
+
+    const grid = document.getElementById('grid');
+    const trapCountDisplay = document.getElementById('trapCount');
+    const minusBtn = document.getElementById('minus');
+    const plusBtn = document.getElementById('plus');
+    const signalBtn = document.getElementById('signal');
+
+    const allowedValues = [2, 3, 5, 7];
+    let currentTrapIndex = allowedValues.indexOf(7);
+    let gridSize = 5 * 5;
+    let isProcessing = false;
+
+    const mapping = { 2: 14, 3: 6, 5: 5, 7: 4 };
+
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = 'index.html';
+      }
+    }
+
+    function createGrid() {
+      grid.innerHTML = '';
+      for (let i = 0; i < gridSize; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.setAttribute('role', 'button');
+        cell.setAttribute('tabindex', '0');
+        grid.appendChild(cell);
+      }
+    }
+
+    function clearGrid() {
+      document.querySelectorAll('.cell').forEach(cell => {
+        cell.classList.remove('open');
+        cell.innerHTML = '';
+      });
+    }
+
+    function getRandomUniqueIndices(count, max) {
+      const indices = new Set();
+      while (indices.size < count) {
+        indices.add(Math.floor(Math.random() * max));
+      }
+      return Array.from(indices);
+    }
+
+    // Optimisation des événements tactiles
+    function addTouchFeedback(element) {
+      element.addEventListener('touchstart', function() {
+        this.style.transform = 'scale(0.95)';
+      }, { passive: true });
+      
+      element.addEventListener('touchend', function() {
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 100);
+      }, { passive: true });
+    }
+
+    minusBtn.addEventListener('click', () => {
+      if (isProcessing) return;
+      if (currentTrapIndex > 0) {
+        currentTrapIndex--;
+        trapCountDisplay.textContent = allowedValues[currentTrapIndex];
+        // Vibration tactile si disponible
+        if (navigator.vibrate) {
+          navigator.vibrate(50);
+        }
+      }
+    });
+
+    plusBtn.addEventListener('click', () => {
+      if (isProcessing) return;
+      if (currentTrapIndex < allowedValues.length - 1) {
+        currentTrapIndex++;
+        trapCountDisplay.textContent = allowedValues[currentTrapIndex];
+        // Vibration tactile si disponible
+        if (navigator.vibrate) {
+          navigator.vibrate(50);
+        }
+      }
+    });
+
+    async function revealCells(indices) {
+      const cells = document.querySelectorAll('.cell');
+      for (const index of indices) {
+        await new Promise(res => setTimeout(res, 300));
+        const cell = cells[index];
+        cell.classList.add('open');
+
+        // Création de l'image étoile SVG optimisée pour mobile
+        const img = document.createElement('img');
+        img.src = 'images/blue-star.svg'; // Chemin vers votre fichier SVG
+        img.alt = 'Étoile bleue';
+        img.className = 'star-image';
+        img.loading = 'lazy';
+        
+        // Fallback SVG intégré si le fichier externe n'est pas disponible
+        img.onerror = function() {
+          this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTUuMDkgOC4yNkwyMiA5TDE3IDEzLjc0TDE4LjE4IDIyTDEyIDE4LjI3TDUuODIgMjJMNyAxMy43NEwyIDlMOC45MSA4LjI2TDEyIDJaIiBmaWxsPSIjMDBkMmZmIiBzdHJva2U9IiMwMGQyZmYiIHN0cm9rZS13aWR0aD0iMSIvPgo8L3N2Zz4K';
+        };
+        
+        cell.appendChild(img);
+
+        // Vibration tactile pour chaque révélation
+        if (navigator.vibrate) {
+          navigator.vibrate(30);
+        }
+      }
+    }
+
+    signalBtn.addEventListener('click', async () => {
+      if (isProcessing) return;
+      
+      isProcessing = true;
+      signalBtn.disabled = true;
+      signalBtn.textContent = 'TRAITEMENT...';
+      
+      clearGrid();
+      const traps = allowedValues[currentTrapIndex];
+      const openCount = mapping[traps];
+      const indices = getRandomUniqueIndices(openCount, gridSize);
+      
+      await revealCells(indices);
+      
+      // Vibration de succès
+      if (navigator.vibrate) {
+        navigator.vibrate([100, 50, 100]);
+      }
+      
+      signalBtn.disabled = false;
+      signalBtn.textContent = translations.signalButton[selectedLanguage];
+      isProcessing = false;
+    });
+
+    // Ajout du feedback tactile aux boutons
+    addTouchFeedback(minusBtn);
+    addTouchFeedback(plusBtn);
+    addTouchFeedback(signalBtn);
+
+    // Initialisation
+    createGrid();
+    trapCountDisplay.textContent = allowedValues[currentTrapIndex];
+
+    // Gestion de l'orientation et du redimensionnement
+    function handleOrientationChange() {
+      // Force un reflow pour corriger les problèmes d'affichage
+      setTimeout(() => {
+        document.body.style.height = window.innerHeight + 'px';
+      }, 100);
+    }
+
+    window.addEventListener('orientationchange', handleOrientationChange);
+    window.addEventListener('resize', handleOrientationChange);
+
+    // Optimisation des performances pour mobile
+    if ('serviceWorker' in navigator) {
+      // Enregistrement d'un service worker pour le cache (optionnel)
+    }
+
+    console.log('Version iPhone SE optimisée chargée avec SVG étoile');
+  </script>
+</body>
+</html>
+
