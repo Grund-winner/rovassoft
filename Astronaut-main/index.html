@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Air Jet - Prédiction</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+</head>
+<body>
+    <!-- Particules d'arrière-plan -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Écran de chargement -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-container">
+            <div class="loading-logo-container">
+                <img src="https://1win.ci/img/logo/main/1win-normal.svg" alt="1Win Logo" class="loading-logo">
+                <div class="logo-glow"></div>
+            </div>
+            <div class="loading-bar-container">
+                <div class="loading-bar">
+                    <div class="loading-progress" id="loading-progress"></div>
+                    <div class="loading-shine"></div>
+                </div>
+            </div>
+            <div class="loading-text">ROVAS</div>
+            <div class="loading-dots">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interface de jeu -->
+    <div id="game-screen" class="game-screen hidden">
+        <!-- Bouton retour -->
+        <button class="back-button" onclick="window.location.href='../index.html'">
+            <span class="back-arrow">←</span>
+            <span class="back-text">RETOUR</span>
+        </button>
+
+        <div class="game-container">
+            <!-- Arrière-plan avec effets -->
+            <div class="background-layer">
+                <img src="https://100hp.app/astronaut/assets/bg.webp" alt="Background" class="main-bg">
+                <div class="bg-overlay bg-overlay-1">
+                    <img src="https://100hp.app/astronaut/assets/media/d25bc203d0b938a6f3d83949c0483d72.svg" alt="Background 1" class="overlay-bg">
+                </div>
+                <div class="bg-overlay bg-overlay-2">
+                    <img src="https://100hp.app/astronaut/assets/media/db6d932aa9227bb6b00c58d37e80f807.svg" alt="Background 2" class="overlay-bg">
+                </div>
+                <div class="atmospheric-effects">
+                    <div class="cloud-effect cloud-1"></div>
+                    <div class="cloud-effect cloud-2"></div>
+                    <div class="cloud-effect cloud-3"></div>
+                </div>
+            </div>
+
+            <!-- Header avec logo et effets -->
+            <div class="header">
+                <div class="logo-container">
+                    <img src="https://100hp.app/astronaut/assets/media/275e5653fc98dbd4d97afc75a6809c93.png" alt="Air Jet Logo" class="game-logo">
+                    <div class="logo-pulse"></div>
+                </div>
+            </div>
+
+            <!-- Zone de jeu principale -->
+            <div class="game-area">
+                <!-- Avion avec effets -->
+                <div class="plane-container" id="plane-container">
+                    <img src="https://100hp.app/astronaut/assets/main-logo.png" alt="Avion" class="plane" id="plane">
+                    <div class="plane-trail" id="plane-trail"></div>
+                    <div class="plane-glow"></div>
+                    <div class="engine-fire" id="engine-fire"></div>
+                </div>
+
+                <!-- Ventilateur avec effets -->
+                <div class="fan-container">
+                    <img src="https://100hp.app/astronaut/assets/media/72306f9351fc87cc1faebf5df4bd85cf.svg" alt="Ventilateur" class="fan">
+                    <div class="fan-glow"></div>
+                    <div class="wind-effect"></div>
+                </div>
+
+                <!-- Affichage du coefficient sans cadre -->
+                <div class="coefficient-display" id="coefficient-display">
+                    <div class="coefficient-value" id="coefficient-value">1.00x</div>
+                    <div class="coefficient-glow"></div>
+                    <div class="coefficient-sparks" id="coefficient-sparks"></div>
+                </div>
+
+                <!-- Trajectoire de l'avion améliorée -->
+                <div class="flight-path" id="flight-path">
+                    <div class="path-glow"></div>
+                </div>
+
+                <!-- Effets visuels supplémentaires -->
+                <div class="visual-effects">
+                    <div class="explosion" id="explosion"></div>
+                    <div class="crash-sparks" id="crash-sparks"></div>
+                </div>
+            </div>
+
+            <!-- Interface de contrôle mobile optimisée -->
+            <div class="control-panel">
+                <button class="predict-button" id="predict-button">
+                    <div class="button-bg"></div>
+                    <div class="button-shine"></div>
+                    <span class="button-text">PRÉDIRE</span>
+                    <div class="button-particles"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Effets d'écran -->
+        <div class="screen-effects">
+            <div class="vignette"></div>
+            <div class="scan-lines"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
