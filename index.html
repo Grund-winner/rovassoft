@@ -5,21 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gaming Hub Mobile</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Styles pour le sélecteur de langue avec drapeaux */
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px; /* Espace entre les drapeaux */
+            padding: 10px 0;
+        }
+        .flag {
+            width: 32px; /* Taille des drapeaux, ajustez si besoin */
+            height: auto;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, opacity 0.2s;
+            opacity: 0.7;
+            border-radius: 50%; /* Pour des drapeaux ronds comme sur l'image */
+            border: 2px solid transparent; /* Bordure pour l'effet 'active' */
+        }
+        .flag:hover {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        .flag.active {
+            opacity: 1;
+            transform: scale(1.1);
+            border-color: #4CAF50; /* Bordure verte pour le drapeau actif */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header class="header">
             <h1 class="title">ROVAS SOFT</h1>
+            <!-- Sélecteur de langue avec des images PNG -->
+            <div class="language-selector">
+                <img src="fr.png" alt="Français" class="flag active" data-lang="fr">
+                <img src="us.png" alt="English" class="flag" data-lang="en">
+            </div>
         </header>
         
         <main class="games-grid">
+            <!-- Les cartes de jeu restent inchangées -->
             <div class="game-card" data-game="mines-old">
                 <div class="card-image">
                     <img src="minesold.avif" alt="Mines Classic" loading="lazy">
                 </div>
                 <div class="card-content">
                     <h3 class="game-title">Mines</h3>
-                    <button class="play-button" onclick="redirectTo('mines.html')">
+                    <button class="play-button" data-link="mines.html">
                         <span>Ouvrir</span>
                     </button>
                 </div>
@@ -31,7 +65,7 @@
                 </div>
                 <div class="card-content">
                     <h3 class="game-title">New Mines</h3>
-                    <button class="play-button" onclick="redirectTo('new-mines.html')">
+                    <button class="play-button" data-link="new-mines.html">
                         <span>Ouvrir</span>
                     </button>
                 </div>
@@ -43,7 +77,7 @@
                 </div>
                 <div class="card-content">
                     <h3 class="game-title">Aviator</h3>
-                    <button class="play-button" onclick="redirectTo('aviator.html')">
+                    <button class="play-button" data-link="aviator.html">
                         <span>Ouvrir</span>
                     </button>
                 </div>
@@ -55,63 +89,63 @@
                 </div>
                 <div class="card-content">
                     <h3 class="game-title">Speed Cash</h3>
-                    <button class="play-button" onclick="redirectTo('speedcash_complete/index.html')">
+                    <button class="play-button" data-link="speedcash_complete/index.html">
                         <span>Ouvrir</span>
                     </button>
                 </div>
             </div>
 
-            <div class="game-card" data-game="speedcash">
+            <div class="game-card" data-game="lucky-jet">
                 <div class="card-image">
                     <img src="lucky.avif" alt="Lucky Jet" loading="lazy">
                 </div>
                 <div class="card-content">
                     <h3 class="game-title">Lucky Jet</h3>
-                    <button class="play-button" onclick="redirectTo('luckyjet.html')">
+                    <button class="play-button" data-link="luckyjet.html">
                         <span>Ouvrir</span>
                     </button>
                 </div>
             </div>
-            <div class="game-card" data-game="speedcash">
+            <div class="game-card" data-game="fortune-crash">
                 <div class="card-image">
                     <img src="fortunecrash.avif" alt="Fortune Crash" loading="lazy">
                 </div>
                 <div class="card-content">
                     <h3 class="game-title">Fortune Crash</h3>
-                    <button class="play-button" onclick="redirectTo('fortune/index.html')">
+                    <button class="play-button" data-link="fortune/index.html">
                         <span>Ouvrir</span>
                     </button>
                 </div>
             </div>
-            <div class="game-card" data-game="speedcash">
+            <div class="game-card" data-game="astronaut">
                 <div class="card-image">
                     <img src="astro.avif" alt="Astronaut" loading="lazy">
                 </div>
                 <div class="card-content">
                     <h3 class="game-title">Astronaut</h3>
-                    <button class="play-button" onclick="redirectTo('Astronaut-main/index.html')">
+                    <button class="play-button" data-link="Astronaut-main/index.html">
                         <span>Ouvrir</span>
                     </button>
                 </div>
             </div>
-            <div class="game-card" data-game="speedcash">
+            <div class="game-card" data-game="meta-cash">
                 <div class="card-image">
                     <img src="metacash.avif" alt="Meta Cash" loading="lazy">
                 </div>
                 <div class="card-content">
                     <h3 class="game-title">Meta Cash</h3>
-                    <button class="play-button" onclick="redirectTo('Metacrash-main/index.html')">
+                    <button class="play-button" data-link="Metacrash-main/index.html">
                         <span>Ouvrir</span>
                     </button>
                 </div>
             </div>
-            <div class="game-card" data-game="speedcash">
+            <div class="game-card" data-game="avia-masters">
                 <div class="card-image">
                     <img src="aviamasters.avif" alt="Avia Masters" loading="lazy">
                 </div>
                 <div class="card-content">
                     <h3 class="game-title">Avia Masters</h3>
-                    <button class="play-button" onclick="redirectTo('copie_page_hacksoftware.html')">
+                    <button class="play-button" data-link="copie_page_hacksoftware.html">
                         <span>Ouvrir</span>
                     </button>
                 </div>
@@ -119,7 +153,6 @@
         </main>
     </div>
 
-    <script src="script.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
-
