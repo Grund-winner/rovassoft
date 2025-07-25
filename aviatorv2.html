@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aviator - Hack Signal</title>
+    <style>
+        :root {
+            --primary-color: #dc2626;
+            --primary-dark: #b91c1c;
+            --primary-glow: #ef4444;
+            --secondary-color: #f59e0b;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --text-color: #ffffff;
+            --bg-color: #0f172a;
+            --accent-color: #dc2626;
+            --network-color: rgba(220, 38, 38, 0.15);
+        }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+        background-image: url('av2bg.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            overflow: none;
+            position: relative;
+        
+        color: white;
+        text-align: center;
+        min-height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        position: relative;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        position: relative;
+        animation: fadeIn 1.2s ease-in-out;
+        padding: 20px;
+        max-width: 100%;
+        z-index: 1;
+    }
+
+    /* Nuages et ciel en arrière-plan */
+    .clouds {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .cloud {
+        position: absolute;
+        background: radial-gradient(ellipse, rgba(255, 255, 255, 0.08) 0%, rgba(239, 68, 68, 0.1) 40%, transparent 70%);
+        border-radius: 100px;
+        animation: float var(--duration) infinite ease-in-out;
+        opacity: var(--opacity);
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateX(var(--start-x)) translateY(var(--start-y));
+        }
+        50% {
+            transform: translateX(var(--end-x)) translateY(var(--end-y));
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .circle-wrapper {
+        position: relative;
+        display: inline-block;
+        animation: floatAnimation 4s ease-in-out infinite;
+        margin: 30px 0;
+    }
+
+    @keyframes floatAnimation {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(2deg); }
+    }
+
+    .circle-outer {
+        border: 6px solid rgba(245, 158, 11, 0.8);
+        border-radius: 50%;
+        width: 240px;
+        height: 240px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 30px rgba(220, 38, 38, 0.5), inset 0 0 20px rgba(245, 158, 11, 0.3);
+        position: relative;
+        background-image: url('https://media0.giphy.com/media/gOCjlDSgbz7msWmdDC/giphy.gif?cid=9b38fe91orxq1ud5pqlra2wmct7o39l5wgvaxaib8iqry6pj&ep=v1_gifs_username&rid=giphy.gif&ct=g');
+            background-size: cover;
+            background-position: center;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .circle-outer:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 40px rgba(220, 38, 38, 0.7), inset 0 0 25px rgba(245, 158, 11, 0.5);
+    }
+
+    .circle-inner {
+        border: 4px solid var(--accent-color);
+        border-radius: 50%;
+        width: 210px;
+        height: 210px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 42px;
+        color: var(--success-color);
+        font-weight: bold;
+        position: relative;
+        animation: glowPulse 2s infinite;
+        background: radial-gradient(circle, rgba(26, 26, 46, 0.9) 0%, rgba(185, 28, 28, 0.2) 100%);
+        text-shadow: 0 0 15px rgba(16, 185, 129, 0.8);
+        box-shadow: inset 0 0 25px rgba(220, 38, 38, 0.4);
+    }
+
+    @keyframes glowPulse {
+        0%, 100% {
+            box-shadow: inset 0 0 25px rgba(220, 38, 38, 0.4);
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.8);
+        }
+        50% {
+            box-shadow: inset 0 0 35px rgba(220, 38, 38, 0.8);
+            text-shadow: 0 0 20px rgba(16, 185, 129, 1);
+        }
+    }
+
+    /* Effet de rotation pour le bord */
+    .circle-outer::before {
+        content: "";
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top: 3px solid rgba(245, 158, 11, 0.9);
+        border-right: 3px solid var(--primary-color);
+        animation: spin 6s linear infinite;
+        pointer-events: none;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .time {
+        font-size: 26px;
+        margin-bottom: 12px;
+        transition: all 0.5s;
+        background: linear-gradient(45deg, #f59e0b, #dc2626, #ef4444);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    .promo {
+        font-size: 20px;
+        margin: 15px 0;
+        padding: 8px 20px;
+        background: rgba(220, 38, 38, 0.15);
+        border-radius: 25px;
+        display: inline-block;
+        backdrop-filter: blur(5px);
+        border: 2px solid rgba(245, 158, 11, 0.3);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+        from { box-shadow: 0 0 10px rgba(220, 38, 38, 0.5); }
+        to { box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); }
+    }
+
+    .button {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        width: 180px;
+        height: 50px;
+        border: none;
+        padding: 12px 24px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 15px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+        box-shadow: 0px 4px 15px rgba(220, 38, 38, 0.4);
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 1px;
+        border: 2px solid rgba(245, 158, 11, 0.5);
+        text-transform: uppercase;
+    }
+
+    .button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, rgba(245, 158, 11, 0), rgba(245, 158, 11, 0.4), rgba(245, 158, 11, 0));
+        transition: all 0.5s;
+    }
+
+    .button:hover::before { left: 100%; }
+
+    .button:hover {
+        background: linear-gradient(135deg, var(--primary-dark), var(--secondary-color));
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0px 7px 20px rgba(245, 158, 11, 0.6);
+    }
+
+    .button:active { transform: translateY(1px); }
+
+    .button:disabled {
+        background: linear-gradient(135deg, #555555, #333333);
+        cursor: not-allowed;
+        box-shadow: none;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        opacity: 0.7;
+    }
+
+    .aviator-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        gap: 20px;
+    }
+
+    .aviator-title {
+        font-size: 48px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        text-shadow: 0 3px 15px rgba(220, 38, 38, 0.8);
+        position: relative;
+        display: inline-block;
+        text-transform: uppercase;
+        color: var(--primary-color);
+        animation: textGlow 3s infinite;
+    }
+
+    @keyframes textGlow {
+        0%, 100% { text-shadow: 0 3px 15px rgba(245, 158, 11, 0.8); }
+        50% { text-shadow: 0 3px 20px rgba(220, 38, 38, 1); }
+    }
+
+    .aviator-image {
+        width: 70px;
+        height: 70px;
+        border-radius: 20px;
+        animation: imageFloat 4s ease-in-out infinite;
+        object-fit: cover;
+        filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.5));
+    }
+
+    @keyframes imageFloat {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-10px) scale(1.05); }
+    }
+
+    /* Effet de réseau en arrière-plan du contenu */
+    .container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: radial-gradient(circle at center, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
+        z-index: -1;
+    }
+
+    /* Effet de notification */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        10% { transform: scale(1.1); }
+        20% { transform: scale(1); }
+        30% { transform: scale(1.1); }
+        40% { transform: scale(1); }
+        100% { transform: scale(1); }
+    }
+
+    .pulse { animation: pulse 2s; }
+
+    /* Effets de particules pour le bouton */
+    .particle {
+        position: absolute;
+        background: linear-gradient(45deg, #f59e0b, #dc2626);
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
+    }
+
+    @keyframes particleAnimation {
+        0% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(var(--tx), var(--ty));
+        }
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 20px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .footer-link {
+        color: var(--secondary-color);
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .footer-link:hover {
+        color: var(--primary-color);
+        text-shadow: 0 0 5px rgba(220, 38, 38, 0.5);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .circle-outer {
+            width: 200px;
+            height: 200px;
+        }
+
+        .circle-inner {
+            width: 175px;
+            height: 175px;
+            font-size: 36px;
+        }
+
+        .aviator-title {
+            font-size: 40px;
+        }
+
+        .time {
+            font-size: 22px;
+        }
+
+        .promo {
+            font-size: 18px;
+        }
+
+        .button {
+            width: 200px;
+            font-size: 16px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .circle-outer {
+            width: 180px;
+            height: 180px;
+        }
+
+        .circle-inner {
+            width: 155px;
+            height: 155px;
+            font-size: 32px;
+        }
+
+        .aviator-title {
+            font-size: 36px;
+        }
+
+        .time {
+            font-size: 20px;
+        }
+
+        .button {
+            width: 200px;
+            font-size: 16px;
+        }
+    }
+</style>
+
+</head>
+<body>
+    <div class="clouds" id="clouds"></div>
+
+<div class="container">
+    <div class="aviator-header">
+        <div class="aviator-title">AVIATOR</div>
+        <img src="av2log.png" alt="Aviator Logo" class="aviator-image" />
+    </div>
+
+    <div class="circle-wrapper">
+        <div class="circle-outer">
+            <div class="circle-inner">
+                <span id="multiplier">0.00X</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="time" id="time">HEURE: 00:00</div>
+
+    <button class="button" id="generateButton" onclick="generateRandomMultiplier()">SIGNAL</button>
+
+    <a href="index.html" class="btn" id="backBtn" style="border: none;color: white;padding: 10px 60px;font-size: 24px;font-weight: bold;border-radius: 15px;background: #000; text-decoration: none;">Retour</a>
+         <br>
+    <div class="time" id="countdown">Nouveau signal : 00:00</div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        createClouds();
+    });
+
+    const apiURL = "https://crash-gateway-cc-cr.gamedev-tech.cc/state?id_n=1play_luckyjet&id_i=1";
+    const headers = { "Authorization": "Bearer demo" };
+
+    function createClouds() {
+        const cloudsContainer = document.getElementById("clouds");
+        const numberOfClouds = 20;
+
+        for (let i = 0; i < numberOfClouds; i++) {
+            const cloud = document.createElement("div");
+            cloud.classList.add("cloud");
+
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 100;
+            const endX = startX + (Math.random() * 40 - 20);
+            const endY = startY + (Math.random() * 20 - 10);
+
+            const width = 60 + Math.random() * 120;
+            const height = 30 + Math.random() * 60;
+
+            const duration = 8 + Math.random() * 12;
+            const opacity = 0.05 + Math.random() * 0.15;
+
+            cloud.style.left = `${startX}%`;
+            cloud.style.top = `${startY}%`;
+            cloud.style.width = `${width}px`;
+            cloud.style.height = `${height}px`;
+            cloud.style.setProperty("--duration", `${duration}s`);
+            cloud.style.setProperty("--opacity", opacity);
+            cloud.style.setProperty("--start-x", "0px");
+            cloud.style.setProperty("--start-y", "0px");
+            cloud.style.setProperty("--end-x", `${endX - startX}%`);
+            cloud.style.setProperty("--end-y", `${endY - startY}%`);
+
+            cloudsContainer.appendChild(cloud);
+        }
+    }
+
+    let buttonDisabled = false;
+
+    function generateRandomMultiplier() {
+        if (buttonDisabled) return;
+
+        const generateButton = document.getElementById("generateButton");
+        const multiplierElement = document.getElementById("multiplier");
+        const circleInner = document.querySelector(".circle-inner");
+
+        generateButton.disabled = true;
+        buttonDisabled = true;
+
+        createParticles(generateButton);
+
+        let dots = 0;
+        const searchingInterval = setInterval(() => {
+            dots = (dots + 1) % 4;
+            const dotString = ".".repeat(dots);
+            multiplierElement.textContent = `DECT${dotString}`;
+
+            const hue = 350 + Math.random() * 60; // Red range
+            circleInner.style.borderColor = `hsl(${hue}, 80%, 60%)`;
+        }, 200);
+
+        const searchTime = 7000 + Math.random() * 10000;
+
+        setTimeout(() => {
+            clearInterval(searchingInterval);
+            circleInner.style.borderColor = "";
+
+            const randomMultiplier = (Math.random() * (6 - 1.50) + 1.50).toFixed(2) + "X";
+            multiplierElement.textContent = randomMultiplier;
+            multiplierElement.classList.add("pulse");
+
+            if (parseFloat(randomMultiplier) > 10) {
+                circleInner.style.color = "#f59e0b";
+                circleInner.style.textShadow = "0 0 20px rgba(245, 158, 11, 1)";
+            } else if (parseFloat(randomMultiplier) > 6) {
+                circleInner.style.color = "#dc2626";
+                circleInner.style.textShadow = "0 0 15px rgba(220, 38, 38, 0.8)";
+            } else {
+                circleInner.style.color = "#10b981";
+                circleInner.style.textShadow = "0 0 15px rgba(16, 185, 129, 0.8)";
+            }
+
+            setTimeout(() => {
+                multiplierElement.classList.remove("pulse");
+            }, 2000);
+
+            const now = new Date();
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+
+            const minutesToAdd = Math.floor(Math.random() * 4) + 1;
+
+            const adjustedHours = currentHours + Math.floor((currentMinutes + minutesToAdd) / 60);
+            const adjustedMinutes = (currentMinutes + minutesToAdd) % 60;
+
+            updateTime(adjustedHours, adjustedMinutes);
+
+            let countdownTime = minutesToAdd * 60;
+
+            const bettingHours = adjustedHours;
+            const bettingMinutes = adjustedMinutes;
+
+            const countdownInterval = setInterval(() => {
+                const currentTime = new Date();
+                const currentHours = currentTime.getHours();
+                const currentMinutes = currentTime.getMinutes();
+
+                const minuteIsStillActive =
+                    currentHours < bettingHours ||
+                    (currentHours === bettingHours && currentMinutes <= bettingMinutes);
+
+                if (!minuteIsStillActive) {
+                    clearInterval(countdownInterval);
+                    updateCountdown(0);
+                    document.getElementById("countdown").textContent = `Vérification du résultat...`;
+
+                    const predictedMultiplier = parseFloat(randomMultiplier);
+
+                    fetch(apiURL, {
+                        method: "GET",
+                        headers: headers,
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            let actualMultiplier = null;
+                            let multiplierFound = false;
+
+                            if (data && data.history && Array.isArray(data.history) && data.history.length > 0) {
+                                actualMultiplier = parseFloat(data.history[0]);
+                                multiplierFound = true;
+                            } else if (
+                                data &&
+                                data.game &&
+                                data.game.history &&
+                                Array.isArray(data.game.history) &&
+                                data.game.history.length > 0
+                            ) {
+                                actualMultiplier = parseFloat(data.game.history[0]);
+                                multiplierFound = true;
+                            } else if (data && data.crash_point) {
+                                actualMultiplier = parseFloat(data.crash_point);
+                                multiplierFound = true;
+                            } else if (data && data.game && data.game.crash_point) {
+                                actualMultiplier = parseFloat(data.game.crash_point);
+                                multiplierFound = true;
+                            }
+
+                            if (!multiplierFound) {
+                                actualMultiplier = 9.99;
+                            }
+
+                            const predictedValue = Math.round(predictedMultiplier * 100) / 100;
+                            const actualValue = Math.round(actualMultiplier * 100) / 100;
+
+                            if (actualValue >= predictedValue) {
+                                multiplierElement.textContent = "Tu aime le bot ?";
+                                circleInner.style.borderColor = "#10b981";
+                                circleInner.style.boxShadow = "0 0 25px rgba(16, 185, 129, 0.7)";
+                            } else {
+                                multiplierElement.textContent = "Tu aime le bot ?";
+                                circleInner.style.borderColor = "#ef4444";
+                                circleInner.style.boxShadow = "0 0 25px rgba(239, 68, 68, 0.7)";
+                                circleInner.style.color = "#ef4444";
+                            }
+
+                            multiplierElement.classList.add("pulse");
+
+                            setTimeout(() => {
+                                generateButton.disabled = false;
+                                buttonDisabled = false;
+
+                                setTimeout(() => {
+                                    multiplierElement.classList.remove("pulse");
+                                    circleInner.style.borderColor = "";
+                                    circleInner.style.boxShadow = "";
+                                    circleInner.style.color = "";
+                                    circleInner.style.textShadow = "";
+                                    multiplierElement.textContent = "0.00X";
+                                }, 3000);
+                            }, 2000);
+                        })
+                        .catch((error) => {
+                            const randomResult = Math.random() > 0.3; // 70% chance de succès
+
+                            if (randomResult) {
+                                multiplierElement.textContent = "Tu aime le bot ?";
+                                circleInner.style.borderColor = "#10b981";
+                                circleInner.style.boxShadow = "0 0 25px rgba(16, 185, 129, 0.7)";
+                            } else {
+                                multiplierElement.textContent = "Tu aime le bot ?";
+                                circleInner.style.borderColor = "#ef4444";
+                                circleInner.style.boxShadow = "0 0 25px rgba(239, 68, 68, 0.7)";
+                                circleInner.style.color = "#ef4444";
+                            }
+
+                            multiplierElement.classList.add("pulse");
+
+                            setTimeout(() => {
+                                generateButton.disabled = false;
+                                buttonDisabled = false;
+
+                                setTimeout(() => {
+                                    multiplierElement.classList.remove("pulse");
+                                    circleInner.style.borderColor = "";
+                                    circleInner.style.boxShadow = "";
+                                    circleInner.style.color = "";
+                                    circleInner.style.textShadow = "";
+                                    multiplierElement.textContent = "0.00X";
+                                }, 3000);
+                            }, 2000);
+                        });
+                } else if (countdownTime <= 0) {
+                    updateCountdown(0);
+                    const secondsLeft =
+                        60 - currentTime.getSeconds() +
+                        (bettingHours - currentHours) * 3600 +
+                        (bettingMinutes - currentMinutes) * 60;
+
+                    if (secondsLeft > 0) {
+                        document.getElementById("countdown").textContent = `Attente: ${Math.floor(
+                            secondsLeft / 60
+                        )}:${(secondsLeft % 60).toString().padStart(2, "0")}`;
+                    } else {
+                        document.getElementById("countdown").textContent = `Minute en cours...`;
+                    }
+                } else {
+                    updateCountdown(countdownTime);
+                    countdownTime--;
+                }
+            }, 1000);
+        }, searchTime);
+    }
+
+    function updateTime(hours, minutes) {
+        const formattedHours = hours.toString().padStart(2, "0");
+        const formattedMinutes = minutes.toString().padStart(2, "0");
+        document.getElementById("time").textContent = `Temps: ${formattedHours}:${formattedMinutes}`;
+    }
+
+    function updateCountdown(secondsLeft) {
+        const minutesLeft = Math.floor(secondsLeft / 60);
+        const secondsLeftFormatted = secondsLeft % 60;
+        const formattedMinutesLeft = minutesLeft.toString().padStart(2, "0");
+        const formattedSecondsLeft = secondsLeftFormatted.toString().padStart(2, "0");
+        document.getElementById("countdown").textContent = `Nouveau signal : ${formattedMinutesLeft}:${formattedSecondsLeft}`;
+
+        if (secondsLeft <= 10 && secondsLeft > 0) {
+            document.getElementById("countdown").style.color = "#ef4444";
+        } else {
+            document.getElementById("countdown").style.color = "";
+        }
+    }
+
+    function createParticles(element) {
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        for (let i = 0; i < 25; i++) {
+            const particle = document.createElement("div");
+            particle.classList.add("particle");
+
+            particle.style.left = centerX + "px";
+            particle.style.top = centerY + "px";
+
+            const size = Math.random() * 10 + 3;
+            particle.style.width = size + "px";
+            particle.style.height = size + "px";
+
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 60 + Math.random() * 100;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+
+            particle.style.setProperty("--tx", tx + "px");
+            particle.style.setProperty("--ty", ty + "px");
+
+            particle.style.animation = `particleAnimation ${1.5 + Math.random()}s forwards`;
+
+            document.body.appendChild(particle);
+
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 2500);
+        }
+    }
+</script>
+
+</body>
+</html>

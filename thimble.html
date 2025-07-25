@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle des Gobelets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, grey 0%, #2d1b69 1%, #000 20%, grey 75%, #000 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    overflow: none;
+}
+
+/* Animated background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 0, 150, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 150, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(255, 150, 0, 0.1) 0%, transparent 50%);
+    animation: backgroundFloat 20s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes backgroundFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(-10px, -20px) rotate(1deg); }
+    66% { transform: translate(10px, -10px) rotate(-1deg); }
+}
+
+.game-container {
+    padding: 30px;
+    text-align: center;
+    max-width: 750px;
+    width: 90%;
+}
+
+.title-image {
+    width: 300px;
+    height: auto;
+    max-width: 90%;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.subtitle {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+/* Platform styling */
+.platform {
+    background: url('https://envs.sh/mCk.jpg') center/cover,
+            linear-gradient(145deg, #d4a574, #8b6740);
+    border-radius: 15px;
+    padding: 30px 20px 20px;
+    margin: 20px 0;
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 3px solid #654321;
+    position: relative;
+    overflow: hidden;
+}
+
+.platform::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #8b6740, #654321, #8b6740);
+    border-radius: 3px 3px 0 0;
+}
+
+.thimbles-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    min-height: 140px;
+    align-items: flex-end;
+}
+
+.thimble {
+    width: 100px;
+    height: 120px;
+    margin-bottom: 30px;
+    background-image: url('bottles.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+    transform-style: preserve-3d;
+}
+
+.thimble:hover {
+    transform: translateY(-5px) scale(1.05);
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.5)) brightness(1.1);
+}
+
+.thimble.shuffling {
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.thimble.lifted {
+    transform: translateY(-30px);
+}
+
+.thimble.correct {
+    filter: drop-shadow(0 12px 24px rgba(50, 205, 50, 0.6)) brightness(1.2);
+    animation: celebrate 0.5s ease-in-out;
+}
+
+.thimble.wrong {
+    filter: drop-shadow(0 12px 24px rgba(220, 20, 60, 0.6)) brightness(1.2);
+    animation: shake 0.5s ease-in-out;
+}
+
+.prediction-mode {
+    filter: brightness(1.2) saturate(1.5) drop-shadow(0 0 20px rgba(186, 85, 211, 0.8));
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes celebrate {
+    0%, 100% { transform: translateY(-30px) scale(1); }
+    50% { transform: translateY(-40px) scale(1.1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateY(-30px) translateX(0); }
+    25% { transform: translateY(-30px) translateX(-8px); }
+    75% { transform: translateY(-30px) translateX(8px); }
+}
+
+@keyframes glow {
+    from { filter: brightness(1.2) saturate(1.5) drop-shadow(0 0 15px rgba(186, 85, 211, 0.6)); }
+    to { filter: brightness(1.4) saturate(1.8) drop-shadow(0 0 25px rgba(186, 85, 211, 1)); }
+}
+
+.ball {
+    width: 25px;
+    height: 25px;
+    background: radial-gradient(circle at 30% 30%, #9B111E, #9B111E);
+    border-radius: 50%;
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.ball.visible {
+    opacity: 1;
+}
+
+/* Ball selection buttons */
+.ball-selection {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: 25px 0;
+}
+
+.ball-selector {
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 150"><defs><linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="%23d4a574"/><stop offset="30%" stop-color="%23b8935f"/><stop offset="70%" stop-color="%23a0784d"/><stop offset="100%" stop-color="%238b6740"/></linearGradient></defs><rect width="400" height="150" fill="url(%23wood)" rx="15"/><g stroke="%23654321" stroke-width="1" opacity="0.2"><line x1="0" y1="30" x2="400" y2="30"/><line x1="0" y1="60" x2="400" y2="60"/><line x1="0" y1="90" x2="400" y2="90"/><line x1="0" y1="120" x2="400" y2="120"/></g></svg>') center/cover,
+            linear-gradient(145deg, #d4a574, #8b6740);
+    border: 3px solid #654321;
+    border-radius: 15px;
+    padding: 0;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.ball-option {
+    background: transparent;
+    border: none;
+    border-right: 2px solid #654321;
+    border-radius: 0;
+    padding: 20px 40px;
+    color: #2c1810;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-width: 150px;
+    justify-content: center;
+    position: relative;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.ball-option:last-child {
+    border-right: none;
+}
+
+.ball-option:hover {
+    background: rgba(139, 103, 64, 0.2);
+    transform: none;
+    box-shadow: none;
+}
+
+.ball-option.selected {
+    background: rgba(139, 103, 64, 0.3);
+    border-color: #2c1810;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ball-option-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #2c1810;
+    margin-bottom: 5px;
+}
+
+.ball-circle {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at 30% 30%, #f0f0f0, #c0c0c0);
+    border-radius: 50%;
+    border: 3px solid #2c1810;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.multiplier-display {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #2c1810;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.controls {
+    margin-top: 25px;
+}
+
+.btn {
+    background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+    border: none;
+    padding: 5px 35px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.message {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    min-height: 30px;
+    transition: all 0.3s ease;
+}
+
+.message.success {
+    color: #90EE90;
+    text-shadow: 0 0 10px rgba(144, 238, 144, 0.5);
+}
+
+.message.error {
+    color: #FF6B6B;
+    text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+}
+
+@media (max-width: 600px) {
+    .thimble {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .game-container {
+        padding: 20px;
+    }
+    
+    .title-image {
+        width: 250px;
+    }
+
+    .ball-selection {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ball-option {
+        min-width: 30px;
+    }
+}
+</style>
+
+</head>
+<body>
+    <div class="game-container">
+        <img src="thimblelog.png" alt="Oracle des Gobelets" class="title-image">
+
+    <div class="ball-selection">
+        <div class="ball-selector">
+            <div class="ball-option selected" data-balls="1">
+                <div class="ball-option-title">1 boule</div>
+                <div class="ball-circle">
+                    <div class="multiplier-display">x<br>2,88</div>
+                </div>
+            </div>
+            <div class="ball-option" data-balls="2">
+                <div class="ball-option-title">2 boules</div>
+                <div class="ball-circle">
+                    <div class="multiplier-display">x<br>1,44</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="platform">
+        <div class="thimbles-container">
+            <div class="thimble" data-index="0">
+                <div class="ball"></div>
+            </div>
+            <div class="thimble" data-index="1">
+                <div class="ball"></div>
+            </div>
+            <div class="thimble" data-index="2">
+                <div class="ball"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button class="btn" id="startBtn">HACK THIMBLES</button>
+    <a href="index.html" class="btn" id="backBtn" style="border: none;color: white;padding: 8px 60px;font-size: 24px;font-weight: bold;border-radius: 15px;background: #000;text-decoration: none;">Retour</a>
+    </div>
+</div>
+
+<script>
+    class ThimblesGame {
+        constructor() {
+            this.thimbles = document.querySelectorAll('.thimble');
+            this.balls = document.querySelectorAll('.ball');
+            this.startBtn = document.getElementById('startBtn');
+            this.message = document.getElementById('message');
+            this.ballOptions = document.querySelectorAll('.ball-option');
+            
+            this.selectedBallCount = 1;
+            this.ballPositions = [];
+            this.isRevealing = false;
+            
+            this.initEventListeners();
+        }
+        
+        initEventListeners() {
+            this.startBtn.addEventListener('click', () => this.startRevelation());
+            
+            this.ballOptions.forEach(option => {
+                option.addEventListener('click', (e) => this.selectBallCount(e.currentTarget));
+            });
+        }
+        
+        selectBallCount(option) {
+            if (this.isRevealing) return;
+            
+            this.ballOptions.forEach(opt => opt.classList.remove('selected'));
+            
+            option.classList.add('selected');
+            this.selectedBallCount = parseInt(option.dataset.balls);
+        }
+        
+        async startRevelation() {
+            if (this.isRevealing) return;
+            
+            this.isRevealing = true;
+            this.startBtn.disabled = true;
+            
+            this.thimbles.forEach((thimble, index) => {
+                thimble.classList.remove('lifted', 'correct', 'wrong', 'prediction-mode', 'shuffling');
+                this.balls[index].classList.remove('visible');
+                thimble.style.transform = '';
+            });
+            
+            await this.performShuffle();
+            
+            this.thimbles.forEach(thimble => {
+                thimble.classList.add('prediction-mode');
+            });
+            
+            const delay = 2000 + Math.random() * 3000;
+            await this.wait(delay);
+            
+            this.ballPositions = this.selectBallPositions(this.selectedBallCount);
+            
+            this.thimbles.forEach(thimble => {
+                thimble.classList.remove('prediction-mode');
+            });
+            
+            await this.revealResult();
+        }
+        
+        selectBallPositions(count) {
+            const positions = [0, 1, 2];
+            const shuffled = positions.sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, count);
+        }
+        
+        async performShuffle() {
+            const shuffleCount = 6;
+            
+            this.thimbles.forEach(thimble => {
+                thimble.classList.add('shuffling', 'prediction-mode');
+            });
+            
+            for (let i = 0; i < shuffleCount; i++) {
+                const pos1 = Math.floor(Math.random() * 3);
+                let pos2 = Math.floor(Math.random() * 3);
+                while (pos2 === pos1) {
+                    pos2 = Math.floor(Math.random() * 3);
+                }
+                
+                const thimble1 = this.thimbles[pos1];
+                const thimble2 = this.thimbles[pos2];
+                
+                const distance = (pos2 - pos1) * 120;
+                
+                thimble1.style.transform = `translateX(${distance}px) translateY(-10px)`;
+                thimble2.style.transform = `translateX(${-distance}px) translateY(-10px)`;
+                
+                await this.wait(600);
+                
+                thimble1.style.transform = '';
+                thimble2.style.transform = '';
+                
+                await this.wait(300);
+            }
+            
+            this.thimbles.forEach(thimble => {
+                thimble.classList.remove('shuffling', 'prediction-mode');
+            });
+            
+            await this.wait(500);
+        }
+        
+        async revealResult() {
+            await this.wait(1000);
+            
+            this.thimbles.forEach((thimble, i) => {
+                setTimeout(() => {
+                    thimble.classList.add('lifted');
+                    if (this.ballPositions.includes(i)) {
+                        this.balls[i].classList.add('visible');
+                        thimble.classList.add('correct');
+                    }
+                }, i * 200);
+            });
+            
+            await this.wait(800);
+            
+            this.isRevealing = false;
+            this.startBtn.disabled = false;
+            this.startBtn.textContent = "HACK THIMBLES";
+            
+            setTimeout(() => {
+                if (!this.isRevealing) {
+                    this.startBtn.textContent = "HACK THIMBLES";
+                    this.resetGame();
+                }
+            }, 4000);
+        }
+        
+        resetGame() {
+            this.thimbles.forEach((thimble, index) => {
+                thimble.classList.remove('lifted', 'correct', 'wrong', 'prediction-mode', 'shuffling');
+                this.balls[index].classList.remove('visible');
+                thimble.style.transform = '';
+            });
+            
+            this.ballPositions = [];
+        }
+        
+        wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        new ThimblesGame();
+    });
+</script>
+
+</body>
+</html>

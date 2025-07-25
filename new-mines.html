@@ -128,6 +128,11 @@
       width: var(--cell-size);
       height: var(--cell-size);
       background-color: #1a1a2e;
+      /* MODIFICATION: Ajout de l'image 1W comme fond permanent qui remplit la case */
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGYAAABNCAYAAABUtBGXAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARSSURBVHhe7Z1ZctNQEEVZBPxAsQGKAsfzGDth3v+ChI7Ec9rtlnGqLOVS9McpIXVLMX3eJFuJX71+/aZK9EgxooRi3r57X334OKom8001XWyTHqC21JhaRw7OxJA4nq2r0XhRfb6bV59Gs6QHqC01ptaRnDMxWOSE6GLJ7aHW1Nx7OBNDF4sukPQHNfcezsQw/kUnJ/1Bzb2HFCNAihElxYiSYkRJMaKkGFFSjCgpRpQUI0qKESXFiJJiREkxoqQYUVKMKClGlBQjSooRJcWIIi+GJ0aW632123+tDo8/q+3912o8XR/jm/sv1cOXX0eIj8bLk2sAjwZtdqe5sDt8q+4m5/mwqH+uz+c1zJf3Yf4tkRWDkNXm0BTiQEEs9bHJrJVDUX3OYrU/u95q83CSY0G6z7+brMJc2D/8OMu/NXJi2h7yR8gFdvtvx3PoJTa23j6eXJPesjdxDzGbD8dGEXB/+H6Wf2tkxFA8hixaY1SMiPJUaNMbzHGGLHvtWf36bTzi893TA42NyAuvY719OLl+H0iIYU5grKcYz6EUk9Ztj3sx7Nt4hH3SdDrfhDmFyaz/ByAlxNDiowL8ja7zGdpKjILbWBd2AcBQGOXAEMMYSIjhP/tcbPHpEV0xVlA21kURg8goXogWFn0gIYaJPCrCJRi+yvk+ZsVs6xWXj0eMp6smf77chfFC19L61kiIoVUzxzwHCsi5tHAfK2Ioto91Ue6NuC+K4uDnrj6REAPME/ScAsW1+55yH8PWx+glxBh2fKwLrjOu712iWGG2aBvDEMiIAVotv37AcrUVhZyYcnfPUjiKc41W7nUgZrGqe24QK9iVW99IibFQVFp+iJlD6BVRDoKj4811g2uzRN7Ww5g/XrBz2hBIiuH+5FjAAHpTyeXfXTnRcW5iWQ774xTeH7OUoXMoJMUwaTet9w9MyHafIafkMiH7uMfGKXArLY5HtJP+sL97KimGYaUpeAfT+dPrWe8ew5wIcikwvSOKd1FWgEMiKYZCtEUpRT/dlnsO4H2rrjy/LQVmOLsmv2yHunexSIop80AXdnVE649yIkqBWTBE8YihJ/2CpBjmgNMCPe3biR/4iMDGfX7ZtwXmhtbHu/YZVu3PGwpZMV3YiR9o/VGexxZ4Vg9pUU7EaPwyf3DinxPDDaXNpfVHeR77eQvXiHI8c9cIhkRSDC16WQ89DFN+6ydiihzl2a3/jJ7PUy7ll61dZAyNpBgmdxYATYEMvrcAxfN5Hi+T/SjPMtTb+11IigGGnrY37JsWf+nOmx7A3NPKPKVr8i7vjUXnIOUllsgWWTH/OylGlBQjSooRJcWIkmJESTGipBhRUowoKUaUFCNKihElxYiSYkRJMaKkGFFSjCgpRpQUI0qKEeUqMfn9McNz1ffH5DcuDQu1vuobl/I7yoaB2lLjq7+jDEjEIl2M8S+5PdSWGkdSIBSTvDwpRpQUI0qKkeRN9Rs0PDFWvoVZTAAAAABJRU5ErkJggg==');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
       border-radius: 8px;
       cursor: pointer;
       transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
@@ -143,7 +148,9 @@
     }
 
     .cell.open {
+      /* MODIFICATION: Suppression de l'image 1W quand la case est révélée */
       background-image: none;
+      background-color: #2a2a4e;
       animation: fadeIn 0.4s ease forwards;
       box-shadow: 0 0 15px var(--star-color), 0 0 25px var(--glow-color-1);
     }
@@ -547,48 +554,24 @@
       signalBtn.textContent = 'TRAITEMENT...';
       
       clearGrid();
-      const traps = allowedValues[currentTrapIndex];
-      const openCount = mapping[traps];
-      const indices = getRandomUniqueIndices(openCount, gridSize);
       
-      await revealCells(indices);
+      const trapCount = allowedValues[currentTrapIndex];
+      const safeCount = mapping[trapCount];
+      const safeIndices = getRandomUniqueIndices(safeCount, gridSize);
       
-      // Vibration de succès
-      if (navigator.vibrate) {
-        navigator.vibrate([100, 50, 100]);
-      }
+      await new Promise(res => setTimeout(res, 1500));
+      await revealCells(safeIndices);
       
-      signalBtn.disabled = false;
       signalBtn.textContent = translations.signalButton[selectedLanguage];
+      signalBtn.disabled = false;
       isProcessing = false;
     });
 
     // Ajout du feedback tactile aux boutons
-    addTouchFeedback(minusBtn);
-    addTouchFeedback(plusBtn);
-    addTouchFeedback(signalBtn);
+    [minusBtn, plusBtn, signalBtn].forEach(addTouchFeedback);
 
     // Initialisation
     createGrid();
-    trapCountDisplay.textContent = allowedValues[currentTrapIndex];
-
-    // Gestion de l'orientation et du redimensionnement
-    function handleOrientationChange() {
-      // Force un reflow pour corriger les problèmes d'affichage
-      setTimeout(() => {
-        document.body.style.height = window.innerHeight + 'px';
-      }, 100);
-    }
-
-    window.addEventListener('orientationchange', handleOrientationChange);
-    window.addEventListener('resize', handleOrientationChange);
-
-    // Optimisation des performances pour mobile
-    if ('serviceWorker' in navigator) {
-      // Enregistrement d'un service worker pour le cache (optionnel)
-    }
-
-    console.log('Version iPhone SE optimisée chargée avec SVG étoile');
   </script>
 </body>
 </html>

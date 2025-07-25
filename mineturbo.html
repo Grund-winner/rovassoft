@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grille 5x5</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #3c3c3c;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        gap: 5px;
+        padding: 7px;
+        background: #1D2025;
+        border-radius: 15px;
+        border: 4px solid #2A2C30;
+    }
+
+    .cell {
+        width: 50px;
+        height: 50px;
+        background: #1D2025;
+        border: 2px solid #AF9460;
+        border-radius: 12px;
+        cursor: pointer;
+        background-image: url('https://envs.sh/feK.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .start-button {
+    width: 180px;
+    height: 50px;
+    background: linear-gradient(135deg, #ff8c42, #ff6b1a);
+    border: 4px solid #fff;
+    border-radius: 15%;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 30px rgba(255, 140, 66, 0.6), 
+                0 0 60px rgba(255, 140, 66, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.start-button:hover {
+    box-shadow: 0 0 40px rgba(255, 140, 66, 0.8), 
+                0 0 80px rgba(255, 140, 66, 0.4),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+    .logo {
+        width: 120px;
+        height: 80px;
+        border-radius: none;
+        display: flex;
+        background: linear-gradient(135deg, green, #ff6b1a);
+    border: 4px solid #AF9460;
+    border-radius: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 30px;   
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 30px;
+    
+    }
+
+    .cell.mine {
+        background-image: url('https://turbomines.turbogames.io/9d2444063013cfc5a95d.png');
+        background-size: cover;
+        background-position: center;
+        border-color: #3D75B6;
+    }
+
+    .cell.mine::after {
+        content: '';
+    }
+</style>
+
+</head>
+<body>
+    <div class="logo">TURBO MINES</div>
+
+<div class="grid">
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+</div>
+
+<button class="start-button" onclick="showMine()">HACK</button>
+
+        <a href="index.html" class="btn" id="backBtn" style="border: none;color: white;padding: 8px 60px;font-size: 24px;font-weight: bold;border-radius: 15px;background: #000; text-decoration: none;">Retour</a>
+
+<script>
+    let currentRow = 4; // Commencer par la rangée du bas (index 4)
+    let gameStarted = false;
+
+    function showMine() {
+        // Si le jeu n'a pas encore commencé, l'initialiser
+        if (!gameStarted) {
+            gameStarted = true;
+            currentRow = 4; // Commencer par la rangée du bas
+            // Effacer toutes les mines existantes
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.classList.remove('mine');
+            });
+        }
+
+        // Si on a encore des rangées à traiter
+        if (currentRow >= 0) {
+            // Générer une position aléatoire dans la rangée actuelle (0-4)
+            const randomCol = Math.floor(Math.random() * 5);
+            
+            // Calculer l'index de la cellule (rangée * 5 + colonne)
+            const cellIndex = currentRow * 5 + randomCol;
+            
+            // Ajouter la mine à cette cellule
+            const cells = document.querySelectorAll('.cell');
+            cells[cellIndex].classList.add('mine');
+            
+            // Passer à la rangée suivante (vers le haut)
+            currentRow--;
+            
+            // Si on a fini toutes les rangées, réinitialiser pour le prochain cycle
+            if (currentRow < 0) {
+                gameStarted = false;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

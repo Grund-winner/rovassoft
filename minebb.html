@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MinesBB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+body {
+    background: #0D1522;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 30px;
+}
+
+.logo {
+    width: 180px;
+    height: 50px;
+    background-image: url('bbtoplog.PNG');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 20px;
+}
+
+.control-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.book-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+}
+
+.book-icon::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 22px;
+    background: white;
+    border-radius: 2px;
+    left: 3px;
+    top: 1px;
+}
+
+.book-icon::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 1.5px;
+    background: #1a2332;
+    top: 7px;
+    left: 5px;
+    box-shadow: 0 4px 0 #1a2332, 0 8px 0 #1a2332;
+}
+
+.multipliers {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.multiplier {
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.multiplier.active {
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    border-color: #4ade80;
+    box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    max-width: 330px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.cell {
+    aspect-ratio: 1;
+    background-image: url('bbm.PNG');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cell.revealed {
+    background-image: url('minebbopen.PNG');
+    cursor: default;
+    animation: reveal 0.5s ease;
+}
+
+.cell.mine-hit {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiByeD0iMTUiIGZpbGw9InVybCgjZXhwbG9kZWRHcmFkaWVudCkiIHN0cm9rZT0iI2VmNDQ0NCIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iOCIgZmlsbD0idXJsKCNpbm5lckV4cGxvZGVkKSIgb3BhY2l0eT0iMC40Ii8+CjxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjMiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNiIvPgo8Y2lyY2xlIGN4PSI3MCIgY3k9IjcwIiByPSI0IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjciLz4KPGN1cmNsZSBjeD0iMjAiIGN5PSI4MCIgcj0iMiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC41Ii8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImV4cGxvZGVkR3JhZGllbnQiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCI+CjxzdG9wIHN0b3AtY29sb3I9IiNlZjQ0NDQiLz4KPHN0b3Agb2Zmc2V0PSIwLjUiIHN0b3AtY29sb3I9IiNkYzI2MjYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjYjkxYzFjIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxsaW5lYXJHcmFkaWVudCBpZD0iaW5uZXJFeHBsb2RlZCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiIGdyYWRpZW50VW5pdHM9Im9iamVjdEJvdW5kaW5nQm94Ij4KPHN0b3Agc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjMiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4=');
+    cursor: default;
+    animation: explode 0.5s ease;
+}
+
+.diamond {
+    width: 40px;
+    height: 40px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDUgTDMwIDEyIEwyNSAzNSBMMTUgMzUgTDEwIDEyIFoiIGZpbGw9InVybCgjZGlhbW9uZEdyYWRpZW50KSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cGF0aCBkPSJNMTAgMTIgTDIwIDIwIEwzMCAxMiIgZmlsbD0idXJsKCNkaWFtb25kSGlnaGxpZ2h0KSIvPgo8ZGVmcz4KPGV4aW5lYXJHcmFkaWVudCBpZD0iZGlhbW9uZEdyYWRpZW50IiB4MT0iMjAiIHkxPSI1IiB4Mj0iMjAiIHkyPSIzNSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjNDBkZGZmIi8+CjxzdG9wIG9mZnNldD0iMC41IiBzdG9wLWNvbG9yPSIjMDBiZmZmIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAwOGNjYyIvPgo8L2xpbmVhckdyYWRpZW50Pgo8bGluZWFyR3JhZGllbnQgaWQ9ImRpYW1vbmRIaWdobGlnaHQiIHgxPSIyMCIgeTE9IjEyIiB4Mj0iMjAiIHkyPSIyMCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuOCIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMC4yIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.cell.revealed .diamond {
+    opacity: 1;
+    animation: sparkle 1s ease infinite alternate;
+}
+
+.mine {
+    width: 40px;
+    height: 40px;
+    background: #1f2937;
+    border-radius: 50%;
+    position: relative;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cell.mine-hit .mine {
+    opacity: 1;
+}
+
+.mine::before {
+    content: '💣';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+}
+
+.game-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.status {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.status.win {
+    color: #4ade80;
+}
+
+.status.lose {
+    color: #ef4444;
+}
+
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(74, 222, 128, 0.4);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+}
+
+@keyframes reveal {
+    0% { transform: scale(0.8); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes explode {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); box-shadow: 0 0 30px rgba(239, 68, 68, 0.8); }
+    100% { transform: scale(1.1); }
+}
+
+@keyframes sparkle {
+    0% { transform: scale(1) rotate(0deg); }
+    100% { transform: scale(1.1) rotate(5deg); }
+}
+
+@media (max-width: 480px) {
+    .multipliers {
+        gap: 8px;
+    }
+    
+    .multiplier {
+        padding: 4px 19px;
+        font-size: 14px;
+    }
+    
+    .game-board {
+        gap: 0px;
+    }
+    
+    .diamond, .mine {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+</style>
+
+</head>
+<body>
+    <div class="header">
+        <div class="logo"></div>
+        <div class="controls">
+            <div class="control-btn">
+                <div class="book-icon"></div>
+            </div>
+            <div class="control-btn">☰</div>
+        </div>
+    </div>
+
+<div class="multipliers" id="multipliers">
+    <div class="multiplier">×1.1</div>
+    <div class="multiplier">×1.25</div>
+    <div class="multiplier">×1.44</div>
+    <div class="multiplier">×1.67</div>
+</div>
+
+<div class="game-board" id="gameBoard"></div>
+
+<div class="game-controls">
+    <button class="btn" id="newGameBtn">Nouvelle Partie</button>
+    <a href="index.html" class="btn" id="backBtn" style="text-decoration: none; display: inline-block;">Retour</a>
+</div>
+
+<script>
+    class MinesGame {
+        constructor() {
+            this.boardSize = 25;
+            this.minesCount = 5;
+            this.board = [];
+            this.revealed = [];
+            this.gameOver = false;
+            this.gameWon = false;
+            this.revealedCount = 0;
+            this.multipliers = [1.1, 1.25, 1.44, 1.67, 2.0, 2.5, 3.0, 4.0, 5.0, 7.5, 10.0, 15.0, 25.0, 50.0, 100.0];
+            
+            this.initializeGame();
+            this.setupEventListeners();
+        }
+
+        initializeGame() {
+            this.gameOver = false;
+            this.gameWon = false;
+            this.revealedCount = 0;
+            this.board = Array(this.boardSize).fill(false);
+            this.revealed = Array(this.boardSize).fill(false);
+            
+            // Place mines randomly
+            const minePositions = new Set();
+            while (minePositions.size < this.minesCount) {
+                minePositions.add(Math.floor(Math.random() * this.boardSize));
+            }
+            
+            minePositions.forEach(pos => {
+                this.board[pos] = true;
+            });
+
+            this.createBoard();
+            this.updateUI();
+        }
+
+        startNewGame() {
+            this.initializeGame();
+            this.revealRandomDiamonds();
+        }
+
+        revealRandomDiamonds() {
+            // Get all safe cells (non-mine positions)
+            const safeCells = [];
+            for (let i = 0; i < this.boardSize; i++) {
+                if (!this.board[i]) {
+                    safeCells.push(i);
+                }
+            }
+
+            // Randomly decide how many diamonds to reveal (1 to 10)
+            const diamondsToReveal = Math.floor(Math.random() * 10) + 1;
+            const actualReveals = Math.min(diamondsToReveal, safeCells.length);
+
+            // Shuffle and pick random safe cells
+            for (let i = 0; i < actualReveals; i++) {
+                const randomIndex = Math.floor(Math.random() * safeCells.length);
+                const cellIndex = safeCells.splice(randomIndex, 1)[0];
+                
+                setTimeout(() => {
+                    this.revealCell(cellIndex);
+                }, i * 200); // Staggered animation
+            }
+        }
+
+        createBoard() {
+            const gameBoard = document.getElementById('gameBoard');
+            gameBoard.innerHTML = '';
+
+            for (let i = 0; i < this.boardSize; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                
+                // Add diamond icon
+                const diamond = document.createElement('div');
+                diamond.className = 'diamond';
+                cell.appendChild(diamond);
+                
+                // Add mine (hidden initially)
+                const mine = document.createElement('div');
+                mine.className = 'mine';
+                cell.appendChild(mine);
+                
+                gameBoard.appendChild(cell);
+            }
+        }
+
+        revealCell(index) {
+            if (this.gameOver || this.revealed[index]) return;
+
+            this.revealed[index] = true;
+            const cell = document.querySelector(`[data-index="${index}"]`);
+
+            if (this.board[index]) {
+                // Hit a mine (shouldn't happen in auto-reveal, but safety check)
+                cell.classList.add('mine-hit');
+                this.gameOver = true;
+            } else {
+                // Safe cell
+                cell.classList.add('revealed');
+                this.revealedCount++;
+                this.updateMultiplierDisplay();
+                
+                if (this.revealedCount === this.boardSize - this.minesCount) {
+                    this.gameWon = true;
+                    this.gameOver = true;
+                } else {
+                    // Bouton reste actif
+                }
+            }
+        }
+
+        revealAllMines() {
+            this.board.forEach((isMine, index) => {
+                if (isMine && !this.revealed[index]) {
+                    const cell = document.querySelector(`[data-index="${index}"]`);
+                    cell.classList.add('mine-hit');
+                }
+            });
+        }
+
+        updateMultiplierDisplay() {
+            const multiplierElements = document.querySelectorAll('.multiplier');
+            multiplierElements.forEach((elem, index) => {
+                elem.classList.remove('active');
+                if (index === this.revealedCount - 1) {
+                    elem.classList.add('active');
+                }
+            });
+        }
+
+        goBack() {
+            // Cette fonction n'est plus utilisée car le bouton redirige vers 1win.com
+        }
+
+        updateUI() {
+            // Reset multiplier display
+            document.querySelectorAll('.multiplier').forEach(elem => {
+                elem.classList.remove('active');
+            });
+        }
+
+        setupEventListeners() {
+            document.getElementById('newGameBtn').addEventListener('click', () => {
+                this.startNewGame();
+            });
+
+            document.getElementById('backBtn').addEventListener('click', (e) => {
+                // Le lien redirige vers https://1win.com
+            });
+        }
+    }
+
+    // Initialize the game when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        new MinesGame();
+    });
+</script>
+
+</body>
+</html>

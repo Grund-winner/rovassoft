@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Miner 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+body {
+    background: #212A39;
+    font-family: 'Arial Black', Arial, sans-serif;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.title {
+    width: 400px;
+    height: 100px;
+    background: url('https://curacao-mines.gamingcorpscasino.com/games/coin-miner-2/assets/default/imgs/logo_landscape.min.png') no-repeat center;
+    background-size: contain;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.game-info {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    align-items: center;
+}
+
+.mines-selector {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mines-selector select {
+    background: #1a1a2e;
+    color: white;
+    border: 1px solid #ffd700;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.generate-btn {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #1a1a2e;
+    border: none;
+    padding: 15px 4px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    margin-top: 20px;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+    background: linear-gradient(135deg, #ffed4e, #ffd700);
+}
+
+.generate-btn:active {
+    transform: translateY(0px);
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3px;
+    margin-bottom: 20px;
+    padding: 5px;
+    background: #000;
+    border-radius: none;
+    border: none;
+}
+
+.card {
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    background-image: url('https://curacao-mines.gamingcorpscasino.com/games/coin-miner-2/assets/default/imgs/tiles/tile_closed.min.png');
+    background-size: cover;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(74, 158, 255, 0.4);
+    border-color: #ffd700;
+}
+
+.card.flipped {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    border-color: none;
+    color: none;
+    font-weight: bold;
+    animation: flip 0.6s ease-in-out;
+}
+
+.card.flipped.treasure {
+    background-image: url('https://curacao-mines.gamingcorpscasino.com/games/coin-miner-2/assets/default/imgs/tiles/tile_coin.min.png');
+    background-size: cover;
+}
+
+.card.bomb {
+    background-image: url('https://curacao-mines.gamingcorpscasino.com/games/coin-miner-2/assets/default/imgs/tiles/tile_mine.min.png');
+    background-size: cover;
+} 
+
+@keyframes flip {
+    0% { transform: rotateY(0deg) scale(1); }
+    50% { transform: rotateY(90deg) scale(1.1); }
+    100% { transform: rotateY(0deg) scale(1); }
+}
+
+.card-front {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    transition: opacity 0.3s ease;
+    position: absolute;
+}
+
+.card-back {
+    position: absolute;
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card.flipped .card-front {
+    opacity: 0;
+}
+
+.card.flipped .card-back {
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .title { width: 300px; height: 75px; }
+    .game-grid { grid-template-columns: repeat(5, 1fr); gap: 5px; }
+    .card { width: 50px; height: 50px; }
+    .game-info { flex-direction: column; gap: 10px; text-align: center; }
+}
+
+</style>
+
+</head>
+<body>
+    <div class="title"></div>
+<div class="game-info">
+    <div class="mines-selector">
+        <label for="minesCount">Nombre de pièges:</label>
+        <select id="minesCount">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+        </select>
+    </div>
+</div>
+
+<div class="game-grid" id="gameGrid"></div>
+
+<button class="generate-btn" onclick="generateMines()">🎲 Montrer les Pièges</button>
+<a href="index.html" class="btn" id="backBtn" style="border: none;color: white;padding: 8px 60px;font-size: 24px;font-weight: bold;border-radius: 15px;background: #000;text-decoration: none;">Retour</a>
+
+<script>
+    let gameState = {
+        gameOver: false,
+        cards: [],
+        flippedCards: 0,
+        bombsRevealed: 0,
+        minesGenerated: false
+    };
+
+    const rewards = ['💰', '💎', '🪙', '⭐', '🏆', '💍', '🔥', '⚡'];
+
+    function initGame() {
+        const grid = document.getElementById('gameGrid');
+        grid.innerHTML = '';
+        gameState.cards = [];
+        gameState.gameOver = false;
+        gameState.flippedCards = 0;
+        gameState.bombsRevealed = 0;
+        gameState.minesGenerated = false;
+
+        // Créer 25 cartes vides
+        const totalCards = 25;
+        
+        for (let i = 0; i < totalCards; i++) {
+            gameState.cards.push('💰'); // Par défaut, toutes les cartes sont des trésors
+        }
+
+        // Créer les éléments DOM
+        for (let i = 0; i < totalCards; i++) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.index = i;
+            card.innerHTML = `
+                <div class="card-front"></div>
+                <div class="card-back"></div>
+            `;
+            card.addEventListener('click', () => flipCard(i));
+            grid.appendChild(card);
+        }
+
+        // Réinitialiser le bouton
+        const btn = document.querySelector('.generate-btn');
+        btn.textContent = '🎲 Montrer les Pièges';
+    }
+
+    function generateMines() {
+        if (gameState.minesGenerated) {
+            // Réinitialiser le jeu
+            initGame();
+            return;
+        }
+
+        const minesCount = parseInt(document.getElementById('minesCount').value);
+        const totalCards = 25;
+        
+        // Placer les mines aléatoirement
+        const minePositions = [];
+        while (minePositions.length < minesCount) {
+            const randomPos = Math.floor(Math.random() * totalCards);
+            if (!minePositions.includes(randomPos)) {
+                minePositions.push(randomPos);
+                gameState.cards[randomPos] = '💣';
+            }
+        }
+
+        // Révéler uniquement les mines
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            if (gameState.cards[index] === '💣') {
+                card.classList.add('flipped');
+                card.classList.add('bomb');
+            } else {
+                card.classList.add('flipped');
+                card.classList.add('treasure');
+            }
+        });
+
+        gameState.minesGenerated = true;
+        
+        // Changer le texte du bouton
+        const btn = document.querySelector('.generate-btn');
+        btn.textContent = '🔄 Nouveau Jeu';
+    }
+
+    function flipCard(index) {
+        // Désactiver les clics sur les cartes - tout se joue avec le bouton
+        return;
+    }
+
+    // Initialiser le jeu au chargement
+    document.addEventListener('DOMContentLoaded', function() {
+        initGame();
+    });
+</script>
+
+</body>
+</html>
