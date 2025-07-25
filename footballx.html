@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FootballX</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #149746;
+            color: white;
+            text-align: center;
+            overflow: hidden; /* Modifié pour éviter les barres de défilement */
+        }
+
+        .container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh; /* Modifié pour occuper toute la hauteur */
+            position: relative;
+            padding: 20px 0; /* Ajout d'un peu d'espace */
+            box-sizing: border-box; /* Assure que le padding est inclus dans la hauteur */
+        }
+
+        .container.active {
+            display: flex;
+        }
+
+        .header {
+            background-color: #333;
+            width: 100%;
+            padding: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo {
+            width: 35px;
+            height: 35px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .game-title img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+        }
+
+        .highlight {
+            color: orange;
+        }
+
+        .question-mark {
+            font-size: 6rem;
+            margin: 30px 0;
+            animation: bounce 1.5s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .multiplier {
+            font-size: 3rem;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 255, 255, 0.7);
+        }
+
+        .start-button {
+            background-color: #FF9900;
+            border: none;
+            color: white;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3), -5px -5px 10px rgba(0, 0, 0, 0.2);
+            margin: 10px 0;
+        }
+
+        .start-button:hover {
+            background-color: #FF9900;
+        }
+
+        .player-image {
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
+        }
+
+        .falling-stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: fall 3s infinite linear;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .game-title-moving img {
+            animation: bounceTitle 1.5s infinite ease-in-out;
+        }
+
+        @keyframes bounceTitle {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1; /* Permet au contenu de prendre l'espace disponible */
+        }
+
+        .game-title,
+        .multiplier {
+            margin-bottom: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="falling-stars"></div>
+
+    <!-- Page 1 -->
+    <div class="container page1 active">
+        <!-- La barre noire "header" a été retirée d'ici -->
+        <div class="content">
+            <div class="game-title">
+                <img src="https://i.ibb.co/K0w99cM/IMG-3473.png" alt="FootballX Title">
+            </div>
+            <div class="question-mark">?</div>
+        </div>
+        <button class="start-button" onclick="showPage2( )">COMMENCER</button>
+    </div>
+
+    <!-- Page 2 -->
+    <div class="container page2">
+        <!-- Le header est vide ici, donc pas de barre noire -->
+        <div class="header">
+        </div>
+        <div class="content">
+            <div class="game-title game-title-moving">
+                <img src="https://i.ibb.co/K0w99cM/IMG-3473.png" alt="FootballX Title">
+            </div>
+            <div class="multiplier" id="multiplier">x0.00</div>
+            <img src="player1.png" alt="Football Player" class="player-image" id="playerImage">
+        </div>
+        <button class="start-button" onclick="startHack( )">NOUVEAU HACK</button>
+        <a href="index.html" class="btn" id="backBtn" style="border: none;color: white;padding: 8px 60px;font-size: 24px;font-weight: bold;border-radius: 15px;background: #000;text-decoration: none;">Retour</a>
+    </div>
+
+    <script>
+    const playerImages = [
+        "https://i.ibb.co/b6tqXk6/IMG-3462.png",
+        "https://i.ibb.co/yQcVXwx/IMG-3461.png",
+        "https://i.ibb.co/b6tqXk6/IMG-3462.png",
+        "https://i.ibb.co/4F5tBvT/IMG-3468.png"
+    ];
+
+    function showPage2( ) {
+        document.querySelector('.page1').classList.remove('active');
+        document.querySelector('.page2').classList.add('active');
+        startHack();
+    }
+
+    function generateMultiplier() {
+        const multiplierElement = document.getElementById("multiplier");
+
+        const maxMultiplier = (Math.random() * 3 + 1).toFixed(2); // entre 1.00 et 4.00
+        let currentMultiplier = 1.0;
+
+        const interval = setInterval(() => {
+            multiplierElement.textContent = "x" + currentMultiplier.toFixed(2);
+            currentMultiplier += 0.1;
+
+            if (currentMultiplier >= parseFloat(maxMultiplier)) {
+                multiplierElement.textContent = "x" + maxMultiplier;
+                clearInterval(interval);
+            }
+        }, 50);
+    }
+
+    function startHack() {
+        const playerImageElement = document.getElementById("playerImage");
+        const randomImage = playerImages[Math.floor(Math.random() * playerImages.length)];
+        playerImageElement.src = randomImage;
+        generateMultiplier();
+    }
+
+    const fallingStarsContainer = document.querySelector('.falling-stars');
+
+    function createStar() {
+        const star = document.createElement('div');
+        star.classList.add('star');
+
+        const leftPosition = Math.random() * 100;
+        const delay = Math.random() * 5;
+
+        star.style.left = `${leftPosition}%`;
+        star.style.animationDelay = `${delay}s`;
+
+        fallingStarsContainer.appendChild(star);
+    }
+
+    for (let i = 0; i < 50; i++) {
+        createStar();
+    }
+</script>
+</body>
+</html>
