@@ -32,9 +32,31 @@
             transform: scale(1.1);
             border-color: #4CAF50; /* Bordure verte pour le drapeau actif */
         }
-        img[src$=".avif"] {
+
+        /* --- AJOUTS POUR AUGMENTER LA TAILLE DES JEUX --- */
+
+        /* 1. Appliquer le zoom sur chaque carte de jeu */
+        .game-card {
             transform: scale(1.4);
+            /* Ajoute une transition douce pour un effet visuel agréable */
+            transition: transform 0.3s ease-in-out;
         }
+
+        /* 2. Ajuster la grille pour donner plus d'espace aux cartes agrandies */
+        .games-grid {
+            /* Augmente l'espacement entre les lignes et les colonnes */
+            gap: 50px 20px; /* Espace vertical plus grand, espace horizontal ajusté */
+            /* Ajoute un peu de marge en haut et en bas pour éviter que les cartes agrandies ne sortent de l'écran */
+            padding-top: 70px;
+            padding-bottom: 50px;
+        }
+
+        /* Optionnel : Compenser le zoom au survol pour éviter un agrandissement excessif */
+        .game-card:hover {
+            /* Vous pouvez garder le scale(1.4) ou l'ajuster légèrement si vous avez un effet de survol */
+            transform: scale(1.45); /* Léger agrandissement supplémentaire au survol */
+        }
+
     </style>
 </head>
 <body>
