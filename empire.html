@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuckyJet Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #000;
+        min-height: 100vh;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        width: 350px;
+        background: url('https://envs.sh/XLK.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid #2d3748;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .logo-1win {
+        width: 80px;
+        height: 40px;
+        background: url('https://i.postimg.cc/X7GL6Qvf/IMG-9507.png') center/contain no-repeat;
+    }
+
+    .logo-luckyjet {
+        width: 120px;
+        height: 40px;
+        background: url('https://i.postimg.cc/vHknwx13/IMG-0933.png') center/contain no-repeat;
+    }
+
+    .game-area {
+        background: url('https://media0.giphy.com/media/ddLGxsqpuLJ9X84tr6/giphy.gif?cid=9b38fe91guuvazg005gqrnlasn7jmrcrssz23sws2pgq2rjr&ep=v1_gifs_username&rid=giphy.gif&ct=g') center/cover;
+        border-radius: 15px;
+        padding: 40px 20px;
+        text-align: center;
+        margin-bottom: 20px;
+        border: 1px solid #334155;
+        position: relative;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .game-area::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .game-area.active {
+        animation: pulse-bg 2s infinite;
+        transform: scale(1.02);
+    }
+
+    .game-area.active::before {
+        background: rgba(0, 0, 0, 0.3);
+        animation: glow 2s infinite alternate;
+    }
+
+    @keyframes pulse-bg {
+        0%, 100% { 
+            background-size: 100% 100%; 
+            filter: brightness(1);
+        }
+        50% { 
+            background-size: 110% 110%; 
+            filter: brightness(1.2);
+        }
+    }
+
+    .multiplier {
+        font-size: 32px;
+        font-weight: bold;
+        color: white;
+        position: relative;
+        z-index: 2;
+    }
+
+    .loading {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgb(255, 85, 0);
+        border-top: 4px solid rgb(255, 200, 0);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        position: relative;
+        z-index: 2;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .stats {
+        background: #0f172a;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #334155;
+    }
+
+    .stat-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .stat-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .stat-label {
+        color: #94a3b8;
+    }
+
+    .stat-value {
+        color: white;
+        font-weight: 500;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn {
+        padding: 15px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-signal {
+        background: linear-gradient(to right, #FF8C00, #FFFF00);
+        color: white;
+    }
+
+    .btn-signal:hover {
+        background: linear-gradient(to right, #FF8C00, #FFFF00);
+    }
+
+    .btn-game {
+        background: #000;
+        color: white;
+    }
+
+    .btn-game:hover {
+        background: #0891b2;
+    }
+</style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-1win"></div>
+            <div class="logo-luckyjet"></div>
+        </div>
+
+    <div class="game-area" id="gameArea">
+        <div class="multiplier" id="multiplier">0.00X</div>
+        <div class="loading" id="loading"></div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-row">
+            <span class="stat-label">Time:</span>
+            <span class="stat-value" id="timeRange">00:00:00-00:00:00</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Chance:</span>
+            <span class="stat-value" id="chance">00%</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Before the signal:</span>
+            <span class="stat-value" id="beforeSignal">00:00</span>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button class="btn btn-signal" onclick="getSignal()" id="signalBtn">GET SIGNAL</button>
+        <button class="btn btn-game" onclick="window.location.href='index.html'">Retour</button>
+    </div>
+</div>
+
+<script>
+    let isGenerating = false;
+    let animationInterval;
+    let countdownInterval;
+    let targetTime = null;
+
+    function getSignal() {
+        if (isGenerating) return;
+        
+        const btn = document.getElementById('signalBtn');
+        const multiplier = document.getElementById('multiplier');
+        const loading = document.getElementById('loading');
+        const gameArea = document.getElementById('gameArea');
+        
+        // Désactiver le bouton
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        isGenerating = true;
+        
+        // Cacher le multiplicateur et afficher le loading
+        multiplier.style.display = 'none';
+        loading.style.display = 'block';
+        
+        // Attendre 5 secondes
+        setTimeout(() => {
+            loading.style.display = 'none';
+            multiplier.style.display = 'block';
+            
+            // Activer l'animation de l'arrière-plan
+            gameArea.classList.add('active');
+            
+            // Générer et animer les cotes pendant 30 secondes
+            animateMultipliers();
+            
+            // Après 30 secondes d'animation
+            setTimeout(() => {
+                gameArea.classList.remove('active');
+                clearInterval(animationInterval);
+                
+                // Générer l'heure prédite
+                generatePredictedTime();
+                
+            }, 10000);
+            
+        }, 5000);
+    }
+    
+    function animateMultipliers() {
+        let startTime = Date.now();
+        let currentMultiplier = 1.50;
+        const targetMultiplier = (Math.random() * 9 + 1.50); // Entre 1.50 et 10.50
+        const duration = 30000; // 30 secondes
+        
+        // Calculer la chance en fonction du multiplicateur final
+        let chanceValue;
+        if (targetMultiplier >= 7 && targetMultiplier <= 10) {
+            chanceValue = 89; // 89% pour les nombres entre 7 et 10
+        } else {
+            chanceValue = Math.floor(Math.random() * 10) + 90; // 90% à 99% pour les autres
+        }
+        
+        // Mettre à jour la chance
+        document.getElementById('chance').textContent = chanceValue + '%';
+        
+        animationInterval = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            
+            if (elapsed >= duration) {
+                clearInterval(animationInterval);
+                return;
+            }
+            
+            // Calcul de la progression (0 à 1)
+            const progress = elapsed / duration;
+            
+            // Augmentation progressive avec un peu d'aléatoire
+            const baseIncrease = (targetMultiplier - 1.50) * progress;
+            const randomVariation = (Math.random() - 0.5) * 0.1; // Petite variation aléatoire
+            
+            currentMultiplier = Math.max(1.50, Math.min(targetMultiplier, 1.50 + baseIncrease + randomVariation));
+            
+            document.getElementById('multiplier').textContent = `${currentMultiplier.toFixed(2)}X`;
+        }, 100); // Mise à jour toutes les 100ms pour plus de fluidité
+    }
+
+    function generatePredictedTime() {
+        const now = new Date();
+        const randomMinutes = Math.floor(Math.random() * 3) + 1; // 1 à 3 minutes
+        
+        // Calculer l'heure de début (maintenant + minutes aléatoires)
+        const startTime = new Date(now.getTime() + (randomMinutes * 60 * 1000));
+        
+        // Calculer l'heure de fin (première heure + 1 minute)
+        const endTime = new Date(startTime.getTime() + (1 * 60 * 1000));
+        
+        // Stocker l'heure cible
+        targetTime = startTime;
+        
+        // Formater les heures
+        const formatTime = (date) => {
+            return date.toTimeString().slice(0, 8);
+        };
+        
+        // Mettre à jour l'affichage
+        document.getElementById('timeRange').textContent = 
+            `${formatTime(startTime)}-${formatTime(endTime)}`;
+        
+        // Démarrer le compte à rebours
+        startCountdown();
+    }
+
+    function startCountdown() {
+        countdownInterval = setInterval(() => {
+            const now = new Date();
+            const timeDiff = targetTime - now;
+            
+            if (timeDiff <= 0) {
+                // Temps écoulé, réactiver le bouton
+                clearInterval(countdownInterval);
+                const btn = document.getElementById('signalBtn');
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                isGenerating = false;
+                
+                document.getElementById('beforeSignal').textContent = '00:00';
+                return;
+            }
+            
+            // Calculer minutes et secondes restantes
+            const minutes = Math.floor(timeDiff / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            
+            const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('beforeSignal').textContent = formattedTime;
+            
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>

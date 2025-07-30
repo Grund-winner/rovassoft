@@ -1,0 +1,98 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: #1E275B;
+    font-family: 'Kanit';
+    color: #ffffff;
+}
+
+.wrapper {
+    position: absolute;
+    width: 100%;
+}
+
+.gamepad-bg {
+    top: -10px;
+    right: -80px;
+}
+
+.gamepad {
+    width: 170px;
+    height: 170px;
+    top: 10px;
+    right: 0px;
+}
+
+.header {
+    height: 190px;
+    width: 100%;
+    position: fixed;
+    overflow: hidden;
+}
+
+.header > * {
+    position: absolute;
+}
+
+.header__title {
+    font-size: 24px;
+    font-weight: 400;
+    top: 30px;
+    left: 30px;
+}
+
+.header__text {
+    font-size: 17px;
+    color: #CACACA;
+    left: 32px;
+    top: 60px;
+}
+
+.games-list {
+    position: relative;
+    top: 120px;
+    padding: 50px 10px 20px 10px;  
+    background: #1E275B;
+    border-radius: 30px 30px 0 0;
+    display: grid;
+    gap: 20px 12px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    transition: 3s;
+}
+
+.games-list__ellipce {
+    position: absolute;
+    left: 47%;
+    top: 20px;
+}
+
+.game-list__img {
+    border-radius: 15px;
+    width: 100%;
+}
+
+.game-list__title {
+    font-size: 17px;
+    font-weight: 400;
+}
+
+@media (min-width: 500px) {
+    .games-list {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media (min-width: 800px) {
+    .games-list {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}

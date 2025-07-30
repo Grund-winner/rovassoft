@@ -1,307 +1,115 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Hub Mobile</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Styles pour le sélecteur de langue avec drapeaux */
-        .language-selector {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px; /* Espace entre les drapeaux */
-            padding: 10px 0;
-        }
-        .flag {
-            width: 32px; /* Taille des drapeaux, ajustez si besoin */
-            height: auto;
-            cursor: pointer;
-            transition: transform 0.2s ease-in-out, opacity 0.2s;
-            opacity: 0.7;
-            border-radius: 50%; /* Pour des drapeaux ronds comme sur l'image */
-            border: 2px solid transparent; /* Bordure pour l'effet 'active' */
-        }
-        .flag:hover {
-            transform: scale(1.2);
-            opacity: 1;
-        }
-        .flag.active {
-            opacity: 1;
-            transform: scale(1.1);
-            border-color: #4CAF50; /* Bordure verte pour le drapeau actif */
-        }
-
-        /* --- AJOUTS POUR AUGMENTER LA TAILLE DES JEUX --- */
-
-        /* 1. Appliquer le zoom sur chaque carte de jeu */
-        .game-card {
-            transform: scale(1.4);
-            /* Ajoute une transition douce pour un effet visuel agréable */
-            transition: transform 0.3s ease-in-out;
-        }
-
-        /* 2. Ajuster la grille pour donner plus d'espace aux cartes agrandies */
-        .games-grid {
-            /* Augmente l'espacement entre les lignes et les colonnes */
-            gap: 50px 20px; /* Espace vertical plus grand, espace horizontal ajusté */
-            /* Ajoute un peu de marge en haut et en bas pour éviter que les cartes agrandies ne sortent de l'écran */
-            padding-top: 70px;
-            padding-bottom: 50px;
-        }
-
-        /* Optionnel : Compenser le zoom au survol pour éviter un agrandissement excessif */
-        .game-card:hover {
-            /* Vous pouvez garder le scale(1.4) ou l'ajuster légèrement si vous avez un effet de survol */
-            transform: scale(1.45); /* Léger agrandissement supplémentaire au survol */
-        }
-
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROVAS SOFT - Menu Jeux</title>
+  <link rel="stylesheet" href="menu.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1 class="title">ROVAS SOFT</h1>
-            <!-- Sélecteur de langue avec des images PNG -->
-            <div class="language-selector">
-                <img src="fr.png" alt="Français" class="flag active" data-lang="fr">
-                <img src="us.png" alt="English" class="flag" data-lang="en">
-            </div>
-        </header>
-        
-        <main class="games-grid">
-            <!-- Les cartes de jeu restent inchangées -->
-            <div class="game-card" data-game="mines-old">
-                <div class="card-image">
-                    <img src="minesold.avif" alt="Mines Classic" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Mines</h3>
-                    <button class="play-button" data-link="mines.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
+  <div class="wrapper">
+    <header class="header">
+      <img class="gamepad-bg" src="gamepad-bg.webp" alt="gamepad-bg" />
+      <img class="gamepad" src="gamepad.webp" alt="gamepad" />
+      <h2 class="header__title">ROVAS SOFT</h2>
+      <p class="header__text">Gaming Hub Mobile</p>
+    </header>
 
-            <div class="game-card" data-game="mines-new">
-                <div class="card-image">
-                    <img src="mines.avif" alt="New Mines" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">New Mines</h3>
-                    <button class="play-button" data-link="new-mines.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
+    <div class="games-list" style="box-shadow: 0px -15px 20px 10px #00dcdc3b; border-top: 5px solid #00dcdc;">
+      <img src="ellipce.webp" class="games-list__ellipce">
 
-            <div class="game-card" data-game="aviator">
-                <div class="card-image">
-                    <img src="aviator.avif" alt="Aviator" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Aviator</h3>
-                    <button class="play-button" data-link="aviatorv2.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
+      <!-- TOUS LES JEUX AJOUTÉS ICI -->
+      <!-- Copie depuis ton 2e HTML, adapté avec les classes CSS existantes -->
 
-            <div class="game-card" data-game="speedcash">
-                <div class="card-image">
-                    <img src="speedcash.avif" alt="Speed Cash" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Speed Cash</h3>
-                    <button class="play-button" data-link="speedcash_complete/index.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
+      <div class="game-list__game">
+        <a href="mines.html"><img src="minesold.avif" class="game-list__img" alt="Mines"></a>
+        <p class="game-list__title">Mines</p>
+      </div>
+      <div class="game-list__game">
+        <a href="new-mines.html"><img src="mines.avif" class="game-list__img" alt="New Mines"></a>
+        <p class="game-list__title">New Mines</p>
+      </div>
+      <div class="game-list__game">
+        <a href="aviatorv2.html"><img src="aviator.avif" class="game-list__img" alt="Aviator"></a>
+        <p class="game-list__title">Aviator</p>
+      </div>
+      <div class="game-list__game">
+        <a href="speedcash_complete/index.html"><img src="speedcash.avif" class="game-list__img" alt="Speed Cash"></a>
+        <p class="game-list__title">Speed Cash</p>
+      </div>
+      <div class="game-list__game">
+        <a href="luckyjet.html"><img src="lucky.avif" class="game-list__img" alt="Lucky Jet"></a>
+        <p class="game-list__title">Lucky Jet</p>
+      </div>
+      <div class="game-list__game">
+        <a href="fortune/index.html"><img src="fortunecrash.avif" class="game-list__img" alt="Fortune Crash"></a>
+        <p class="game-list__title">Fortune Crash</p>
+      </div>
+      <div class="game-list__game">
+        <a href="Astronaut-main/index.html"><img src="astro.avif" class="game-list__img" alt="Astronaut"></a>
+        <p class="game-list__title">Astronaut</p>
+      </div>
+      <div class="game-list__game">
+        <a href="Metacrash-main/index.html"><img src="metacash.avif" class="game-list__img" alt="Meta Cash"></a>
+        <p class="game-list__title">Meta Cash</p>
+      </div>
+      <div class="game-list__game">
+        <a href="copie_page_hacksoftware.html"><img src="aviamasters.avif" class="game-list__img" alt="Avia Masters"></a>
+        <p class="game-list__title">Avia Masters</p>
+      </div>
+      <div class="game-list__game">
+        <a href="magicdice.html"><img src="magicdice.avif" class="game-list__img" alt="Magic Dice"></a>
+        <p class="game-list__title">Magic Dice</p>
+      </div>
+      <div class="game-list__game">
+        <a href="sixorout.html"><img src="sixorout.avif" class="game-list__img" alt="Six or out"></a>
+        <p class="game-list__title">Six or out</p>
+      </div>
+      <div class="game-list__game">
+        <a href="thimble.html"><img src="thimble.avif" class="game-list__img" alt="Thimble"></a>
+        <p class="game-list__title">Thimble</p>
+      </div>
+      <div class="game-list__game">
+        <a href="rockectqueen.html"><img src="rockectqueen.avif" class="game-list__img" alt="Rocket Queen"></a>
+        <p class="game-list__title">Rocket Queen</p>
+      </div>
+      <div class="game-list__game">
+        <a href="coinminer.html"><img src="coinminer.avif" class="game-list__img" alt="Coin Miner 2"></a>
+        <p class="game-list__title">Coin Miner 2</p>
+      </div>
+      <div class="game-list__game">
+        <a href="mineturbo.html"><img src="mineturbo.avif" class="game-list__img" alt="Turbo Mines"></a>
+        <p class="game-list__title">Turbo Mines</p>
+      </div>
+      <div class="game-list__game">
+        <a href="minebb.html"><img src="minebb.avif" class="game-list__img" alt="Mines BB"></a>
+        <p class="game-list__title">Mines BB</p>
+      </div>
+      <div class="game-list__game">
+        <a href="minegold.html"><img src="minegold.avif" class="game-list__img" alt="Mines Gold"></a>
+        <p class="game-list__title">Mines Gold</p>
+      </div>
+      <div class="game-list__game">
+        <a href="aviator.html"><img src="aviator.avif" class="game-list__img" alt="Aviator"></a>
+        <p class="game-list__title">Aviator</p>
+      </div>
+      <div class="game-list__game">
+        <a href="footballx.html"><img src="footballx.avif" class="game-list__img" alt="Football X"></a>
+        <p class="game-list__title">Football X</p>
+      </div>
+      <div class="game-list__game">
+        <a href="dice.html"><img src="dice.avif" class="game-list__img" alt="Dice"></a>
+        <p class="game-list__title">Dice</p>
+      </div>
+      <div class="game-list__game">
+        <a href="empire.html"><img src="crime.avif" class="game-list__img" alt="Crime Empire"></a>
+        <p class="game-list__title">Crime Empire</p>
+      </div>
 
-            <div class="game-card" data-game="lucky-jet">
-                <div class="card-image">
-                    <img src="lucky.avif" alt="Lucky Jet" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Lucky Jet</h3>
-                    <button class="play-button" data-link="luckyjet.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="game-card" data-game="fortune-crash">
-                <div class="card-image">
-                    <img src="fortunecrash.avif" alt="Fortune Crash" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Fortune Crash</h3>
-                    <button class="play-button" data-link="fortune/index.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="astronaut">
-                <div class="card-image">
-                    <img src="astro.avif" alt="Astronaut" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Astronaut</h3>
-                    <button class="play-button" data-link="Astronaut-main/index.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="meta-cash">
-                <div class="card-image">
-                    <img src="metacash.avif" alt="Meta Cash" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Meta Cash</h3>
-                    <button class="play-button" data-link="Metacrash-main/index.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="avia-masters">
-                <div class="card-image">
-                    <img src="aviamasters.avif" alt="Avia Masters" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Avia Masters</h3>
-                    <button class="play-button" data-link="copie_page_hacksoftware.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="Magic-Dice">
-                <div class="card-image">
-                    <img src="magicdice.avif" alt="Magic Dice" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Magic Dice</h3>
-                    <button class="play-button" data-link="magicdice.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="six-or-out">
-                <div class="card-image">
-                    <img src="sixorout.avif" alt="Six or out" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Six or out</h3>
-                    <button class="play-button" data-link="sixorout.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="Thimble">
-                <div class="card-image">
-                    <img src="thimble.avif" alt="Thimble" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Thimble</h3>
-                    <button class="play-button" data-link="thimble.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="Rocket-queen">
-                <div class="card-image">
-                    <img src="rockectqueen.avif" alt="Rocket Queen" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Rocket Queen</h3>
-                    <button class="play-button" data-link="rockectqueen.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="Coin-miner-2">
-                <div class="card-image">
-                    <img src="coinminer.avif" alt="Coin Miner " loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Coin Miner 2</h3>
-                    <button class="play-button" data-link="coinminer.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="Turbo-mines">
-                <div class="card-image">
-                    <img src="mineturbo.avif" alt="Turbo Mines" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Turbo Mines</h3>
-                    <button class="play-button" data-link="mineturbo.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="Mines-bb">
-                <div class="card-image">
-                    <img src="minebb.avif" alt="Mines BB" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Mines BB</h3>
-                    <button class="play-button" data-link="minebb.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="game-card" data-game="Mines-gold">
-                <div class="card-image">
-                    <img src="minegold.avif" alt="Mines Gold" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Mines Gold</h3>
-                    <button class="play-button" data-link="minegold.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="aviator">
-                <div class="card-image">
-                    <img src="aviator.avif" alt="Aviator" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Aviator</h3>
-                    <button class="play-button" data-link="aviator.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="game-card" data-game="Football-x">
-                <div class="card-image">
-                    <img src="footballx.avif" alt="Football X" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3 class="game-title">Football X</h3>
-                    <button class="play-button" data-link="footballx.html">
-                        <span>Ouvrir</span>
-                    </button>
-                </div>
-            </div>
-        </main>
     </div>
-
-    <script src="scripts.js"></script>
+  </div>
 </body>
 </html>
