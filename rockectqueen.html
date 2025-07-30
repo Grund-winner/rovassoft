@@ -1,718 +1,365 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LuckyJet - Gagnez Gros</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuckyJet Interface</title>
     <style>
-        :root {
-            --primary-color: #367de7;
-            --primary-dark: #2252a3;
-            --primary-glow: #4e8eff;
-            --success-color: #00FF00;
-            --text-color: #ffffff;
-            --bg-color: #0f1525;
-            --accent-color: #367de7;
-            --network-color: rgba(255, 255, 255, 0.15);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(to bottom, #e2319c, #ff6f39);
-            color: white;
-            overflow: none;
-            position: relative;
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #000;
+        min-height: 100vh;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        width: 350px;
+        background: url('https://envs.sh/XLK.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid #2d3748;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .logo-1win {
+        width: 80px;
+        height: 40px;
+        background: url('https://i.postimg.cc/X7GL6Qvf/IMG-9507.png') center/contain no-repeat;
+    }
+
+    .logo-luckyjet {
+        width: 120px;
+        height: 40px;
+        background: url('https://iili.io/3GUGTEx.md.webp') center/contain no-repeat;
+    }
+
+    .game-area {
+        background: url('https://media4.giphy.com/media/ITtYmhc12xghhHeal1/giphy.gif?cid=9b38fe911y97plb0jvnzmmnmyepnz4vsutqppsz30pqfghsn&ep=v1_gifs_username&rid=giphy.gif&ct=g') center/cover;
+        border-radius: 15px;
+        padding: 40px 20px;
+        text-align: center;
+        margin-bottom: 20px;
+        border: 1px solid #334155;
+        position: relative;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .game-area::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .game-area.active {
+        animation: pulse-bg 2s infinite;
+        transform: scale(1.02);
+    }
+
+    .game-area.active::before {
+        background: rgba(0, 0, 0, 0.3);
+        animation: glow 2s infinite alternate;
+    }
+
+    @keyframes pulse-bg {
+        0%, 100% { 
+            background-size: 100% 100%; 
+            filter: brightness(1);
         }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            position: relative;
-            animation: fadeIn 1.2s ease-in-out;
-            padding: 20px;
-            max-width: 100%;
-            z-index: 1;
+        50% { 
+            background-size: 110% 110%; 
+            filter: brightness(1.2);
         }
+    }
 
-        /* Ajout d'étoiles en arrière-plan */
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
+    .multiplier {
+        font-size: 32px;
+        font-weight: bold;
+        color: white;
+        position: relative;
+        z-index: 2;
+    }
 
-        .star {
-            position: absolute;
-            background-color: white;
-            border-radius: 50%;
-            animation: twinkle var(--duration) infinite ease-in-out;
-            opacity: var(--opacity);
-        }
+    .loading {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgb(255, 85, 0);
+        border-top: 4px solid rgb(255, 200, 0);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        position: relative;
+        z-index: 2;
+    }
 
-        @keyframes twinkle {
-            0%,
-            100% {
-                opacity: var(--opacity);
-            }
-            50% {
-                opacity: 0.2;
-            }
-        }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .stats {
+        background: #0f172a;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #334155;
+    }
 
-        .circle-wrapper {
-            position: relative;
-            display: inline-block;
-            animation: floatAnimation 4s ease-in-out infinite;
-            margin: 30px 0;
-        }
+    .stat-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
 
-        @keyframes floatAnimation {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
-        }
+    .stat-row:last-child {
+        margin-bottom: 0;
+    }
 
-        .circle-outer {
-            border: 6px solid yellow;
-            border-radius: 50%;
-            width: 240px;
-            height: 240px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 25px rgba(54, 125, 231, 0.3), inset 0 0 15px rgba(54, 125, 231, 0.5);
-            position: relative;
-            background: rgba(15, 21, 37, 0.7);
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-        }
+    .stat-label {
+        color: #94a3b8;
+    }
 
-        .circle-outer:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 35px rgba(78, 142, 255, 0.4), inset 0 0 20px rgba(54, 125, 231, 0.7);
-        }
+    .stat-value {
+        color: white;
+        font-weight: 500;
+    }
 
-        .circle-inner {
-            border: 4px solid pink;
-            border-radius: 50%;
-            width: 210px;
-            height: 210px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 42px;
-            color: var(--success-color);
-            font-weight: bold;
-            position: relative;
-            animation: glowPulse 2s infinite;
-            background: rgba(10, 15, 30, 0.7);
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-            box-shadow: inset 0 0 20px rgba(54, 125, 231, 0.3);
-        }
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
 
-        @keyframes glowPulse {
-            0%,
-            100% {
-                box-shadow: inset 0 0 20px rgba(138, 0, 225, 0.3);
-                text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-            }
-            50% {
-                box-shadow: inset 0 0 30px rgba(138, 0, 225, 0.7);
-                text-shadow: 0 0 15px rgba(0, 255, 0, ""1);
-            }
-        }
+    .btn {
+        padding: 15px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
 
-        /* Effet de rotation pour le bord */
-        .circle-outer::before {
-            content:"";
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            border-top: 2px solid blue;
-            border-right: 3px dashed blue;
-            animation: spin 8s linear infinite;
-            pointer-events: none;
-        }
+    .btn-signal {
+        background: linear-gradient(to right, #FF8C00, pink);
+        color: white;
+    }
 
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
+    .btn-signal:hover {
+        background: linear-gradient(to right, #FF8C00, #FFFF00);
+    }
 
-        .time {
-            font-size: 26px;
-            margin-bottom: 12px;
-            transition: all 0.5s;
-            background: linear-gradient(to right, #ffffff, var(--primary-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-            font-weight: bold;
-        }
+    .btn-game {
+        background: #000;
+        color: white;
+    }
 
-        .promo {
-            font-size: 20px;
-            margin: 15px 0;
-            padding: 8px 20px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 25px;
-            display: inline-block;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            animation: glow 2s infinite alternate;
-        }
+    .btn-game:hover {
+        background: #0891b2;
+    }
+</style>
 
-        @keyframes glow {
-            from {
-                box-shadow: 0 0 5px rgba(54, 125, 231, 0.5);
-            }
-            to {
-                box-shadow: 0 0 20px rgba(78, 142, 255, 0.8);
-            }
-        }
-
-        .button {
-            background: orange;
-            color: white;
-            height: 50px;
-            border: none;
-            padding: 12px 24px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 15px;
-            margin-top: 15px;
-            margin-bottom: 10px;
-            transition: all 0.3s;
-            box-shadow: 0px 4px 15px rgba(54, 125, 231, 0.4);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 1px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            text-transform: uppercase;
-        }
-
-        .button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                to right,
-                rgba(255, 255, 255, 0),
-                rgba(255, 255, 255, 0.3),
-                rgba(255, 255, 255, 0)
-            );
-            transition: all 0.5s;
-        }
-
-        .button:hover::before {
-            left: 100%;
-        }
-
-        .button:hover {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0px 7px 20px rgba(78, 142, 255, 0.6);
-        }
-
-        .button:active {
-            transform: translateY(1px);
-        }
-
-        .button:disabled {
-            background: linear-gradient(135deg, #555555, #333333);
-            cursor: not-allowed;
-            box-shadow: none;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            opacity: 0.7;
-        }
-
-        
-
-        /* Effets de particules pour le bouton */
-        .particle {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-        }
-
-        @keyframes particleAnimation {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--tx), var(--ty));
-            }
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .circle-outer {
-                width: 200px;
-                height: 200px;
-            }
-
-            .circle-inner {
-                width: 175px;
-                height: 175px;
-                font-size: 36px;
-            }
-
-            .luckyjet {
-                font-size: 36px;
-            }
-
-            .time,
-            .countdown {
-                font-size: 22px;
-            }
-
-            .promo {
-                font-size: 18px;
-            }
-
-            .button {
-                width: 200px;
-                font-size: 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .circle-outer {
-                width: 180px;
-                height: 180px;
-            }
-
-            .circle-inner {
-                width: 155px;
-                height: 155px;
-                font-size: 32px;
-            }
-
-            .luckyjet {
-                font-size: 32px;
-            }
-
-            .time,
-            .countdown {
-                font-size: 20px;
-            }
-
-            .button {
-                width: 200px;
-                font-size: 16px;
-            }
-        }
-
-            .rocket-girl {
-            position: absolute;
-            top: 170px;
-            width: 20%;
-            max-width: 200px;
-            z-index: 2;
-        }
-        .multiplier-circle {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background-color: #222;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 5px solid #ffcc00;
-            z-index: 1;
-            margin-bottom: 20px;
-        }
-
-            .h1 img {
-          width: 200px; /* ajuste selon ton besoin */
-          margin-bottom: 10px;
-          animation: neonFlash 1.5s infinite alternate;
-        }
-
-        @keyframes neonFlash {
-          from {
-            opacity: 0.3;
-            filter: drop-shadow(0 0 0px #0ff);
-          }
-          to {
-            opacity: 1;
-            filter: drop-shadow(0 0 5px #0ff) drop-shadow(0 0 10px #0ff);
-          }
-        }
-
-        .titre {
-          text-align: center;
-        }
-    </style>
 </head>
 <body>
-
     <div class="container">
-        <div class="h1 titre">
-            <img src="rocklog.webp" alt="Titre Image" />
+        <div class="header">
+            <div class="logo-1win"></div>
+            <div class="logo-luckyjet"></div>
         </div>
 
-        <img src="angirl.png" alt="Anime girl on rocket" class="rocket-girl" />
-
-        <div class="circle-wrapper">
-            <div class="circle-outer">
-                <div class="circle-inner">
-                    <span id="multiplier">0.00X</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="time" id="time">HEURE: 00:00</div>
-
-        
-        <button class="button" id="generateButton" onclick="generateRandomMultiplier()">HACK SIGNAL</button>
-        <a href="index.html" class="btn" id="backBtn" style="border: none;color: white;padding: 8px 60px;font-size: 24px;font-weight: bold;border-radius: 15px;background: #000;text-decoration: none;">Retour</a>
-        <br>
-        <div class="time" id="countdown">Nouveau signal dans: 00:00</div>
-
+    <div class="game-area" id="gameArea">
+        <div class="multiplier" id="multiplier">0.00X</div>
+        <div class="loading" id="loading"></div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            createStars();
-        });
+    <div class="stats">
+        <div class="stat-row">
+            <span class="stat-label">Time:</span>
+            <span class="stat-value" id="timeRange">00:00:00-00:00:00</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Chance:</span>
+            <span class="stat-value" id="chance">00%</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Before the signal:</span>
+            <span class="stat-value" id="beforeSignal">00:00</span>
+        </div>
+    </div>
 
-        const apiURL = "https://crash-gateway-cc-cr.gamedev-tech.cc/state?id_n=1play_rocketqueen&id_i=1";
-        const headers = { "Authorization": "Bearer demo" };
+    <div class="buttons">
+        <button class="btn btn-signal" onclick="getSignal()" id="signalBtn">GET SIGNAL</button>
+        <button class="btn btn-game" onclick="window.location.href='index.html'">Retour</button>
+    </div>
+</div>
 
-        function createStars() {
-            const starsContainer = document.getElementById("stars");
-            const numberOfStars = 100;
+<script>
+    let isGenerating = false;
+    let animationInterval;
+    let countdownInterval;
+    let targetTime = null;
 
-            for (let i = 0; i < numberOfStars; i++) {
-                const star = document.createElement("div");
-                star.classList.add("star");
-
-                const x = Math.random() * 100;
-                const y = Math.random() * 100;
-
-                const size = Math.random() * 10;
-
-                const duration = 2 + Math.random() * 4;
-                const opacity = 0.2 + Math.random() * 10.8;
-
-                star.style.left = `${x}%`;
-                star.style.top = `${y}%`;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.setProperty("--duration", `${duration}s`);
-                star.style.setProperty("--opacity", opacity);
-
-                starsContainer.appendChild(star);
-            }
-        }
-
-        let buttonDisabled = false;
-
-        function generateRandomMultiplier() {
-            if (buttonDisabled) return;
-
-            const generateButton = document.getElementById("generateButton");
-            const multiplierElement = document.getElementById("multiplier");
-            const circleInner = document.querySelector(".circle-inner");
-
-            generateButton.disabled = true;
-            buttonDisabled = true;
-
-            createParticles(generateButton);
-
-            let dots = 0;
-            const searchingInterval = setInterval(() => {
-                dots = (dots + 1) % 4;
-                const dotString = ".".repeat(dots);
-                multiplierElement.textContent = `HACK${dotString}`;
-
-                circleInner.style.borderColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
-            }, 200);
-
-            const searchTime = 7000 + Math.random() * 10000;
-
+    function getSignal() {
+        if (isGenerating) return;
+        
+        const btn = document.getElementById('signalBtn');
+        const multiplier = document.getElementById('multiplier');
+        const loading = document.getElementById('loading');
+        const gameArea = document.getElementById('gameArea');
+        
+        // Désactiver le bouton
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        isGenerating = true;
+        
+        // Cacher le multiplicateur et afficher le loading
+        multiplier.style.display = 'none';
+        loading.style.display = 'block';
+        
+        // Attendre 5 secondes
+        setTimeout(() => {
+            loading.style.display = 'none';
+            multiplier.style.display = 'block';
+            
+            // Activer l'animation de l'arrière-plan
+            gameArea.classList.add('active');
+            
+            // Générer et animer les cotes pendant 30 secondes
+            animateMultipliers();
+            
+            // Après 30 secondes d'animation
             setTimeout(() => {
-                clearInterval(searchingInterval);
-                circleInner.style.borderColor = "";
-
-                const randomMultiplier = (Math.random() * (3 - 2) + 2).toFixed(2) + "X";
-                multiplierElement.textContent = randomMultiplier;
-                multiplierElement.classList.add("pulse");
-
-                if (parseFloat(randomMultiplier) > 8) {
-                    circleInner.style.color = "#FFD700";
-                    circleInner.style.textShadow = "0 0 15px rgba(255, 215, 0, 0.8)";
-                } else if (parseFloat(randomMultiplier) > 6) {
-                    circleInner.style.color = "#00FFFF";
-                    circleInner.style.textShadow = "0 0 12px rgba(0, 255, 255, 0.7)";
-                } else {
-                    circleInner.style.color = "#00FF00";
-                    circleInner.style.textShadow = "0 0 10px rgba(0, 255, 0, 0.7)";
-                }
-
-                setTimeout(() => {
-                    multiplierElement.classList.remove("pulse");
-                }, 2000);
-
-                const now = new Date();
-                const currentHours = now.getHours();
-                const currentMinutes = now.getMinutes();
-
-                const minutesToAdd = Math.floor(Math.random() * 4) + 1;
-
-                const adjustedHours = currentHours + Math.floor((currentMinutes + minutesToAdd) / 60);
-                const adjustedMinutes = (currentMinutes + minutesToAdd) % 60;
-
-                updateTime(adjustedHours, adjustedMinutes);
-
-                let countdownTime = minutesToAdd * 60;
-
-                const bettingHours = adjustedHours;
-                const bettingMinutes = adjustedMinutes;
-
-                const countdownInterval = setInterval(() => {
-                    const currentTime = new Date();
-                    const currentHours = currentTime.getHours();
-                    const currentMinutes = currentTime.getMinutes();
-
-                    const minuteIsStillActive =
-                        currentHours < bettingHours ||
-                        (currentHours === bettingHours && currentMinutes <= bettingMinutes);
-
-                    if (!minuteIsStillActive) {
-                        clearInterval(countdownInterval);
-                        updateCountdown(0);
-                        document.getElementById("countdown").textContent = `Vérification du résultat...`;
-
-                        const predictedMultiplier = parseFloat(randomMultiplier);
-
-                        fetch(apiURL, {
-                            method: "GET",
-                            headers: headers,
-                        })
-                            .then((response) => response.json())
-                            .then((data) => {
-                                let actualMultiplier = null;
-                                let multiplierFound = false;
-
-                                if (data && data.history && Array.isArray(data.history) && data.history.length > 0) {
-                                    actualMultiplier = parseFloat(data.history[0]);
-                                    multiplierFound = true;
-                                } else if (
-                                    data &&
-                                    data.game &&
-                                    data.game.history &&
-                                    Array.isArray(data.game.history) &&
-                                    data.game.history.length > 0
-                                ) {
-                                    actualMultiplier = parseFloat(data.game.history[0]);
-                                    multiplierFound = true;
-                                } else if (data && data.crash_point) {
-                                    actualMultiplier = parseFloat(data.crash_point);
-                                    multiplierFound = true;
-                                } else if (data && data.game && data.game.crash_point) {
-                                    actualMultiplier = parseFloat(data.game.crash_point);
-                                    multiplierFound = true;
-                                }
-
-                                if (!multiplierFound) {
-                                    actualMultiplier = 9.99;
-                                }
-
-                                const predictedValue = Math.round(predictedMultiplier * 100) / 100;
-                                const actualValue = Math.round(actualMultiplier * 100) / 100;
-
-                                if (actualValue >= predictedValue) {
-                                    multiplierElement.textContent = "validé ✅";
-                                    circleInner.style.borderColor = "#00FF00";
-                                    circleInner.style.boxShadow = "0 0 20px rgba(0, 255, 0, 0.5)";
-                                } else {
-                                    multiplierElement.textContent = "échoué ❌";
-                                    circleInner.style.borderColor = "#FF0000";
-                                    circleInner.style.boxShadow = "0 0 20px rgba(255, 0, 0, 0.5)";
-                                    circleInner.style.color = "#FF5555";
-                                }
-
-                                multiplierElement.classList.add("pulse");
-
-                                setTimeout(() => {
-                                    generateButton.disabled = false;
-                                    buttonDisabled = false;
-
-                                    setTimeout(() => {
-                                        multiplierElement.classList.remove("pulse");
-                                        circleInner.style.borderColor = "";
-                                        circleInner.style.boxShadow = "";
-                                        circleInner.style.color = "";
-                                        circleInner.style.textShadow = "";
-                                        multiplierElement.textContent = "0.00X";
-                                    }, 3000);
-                                }, 2000);
-                            })
-                            .catch((error) => {
-                                const randomResult = Math.random() > 0.5;
-
-                                if (randomResult) {
-                                    multiplierElement.textContent = "validé ✅";
-                                    circleInner.style.borderColor = "#00FF00";
-                                    circleInner.style.boxShadow = "0 0 20px rgba(0, 255, 0, 0.5)";
-                                } else {
-                                    multiplierElement.textContent = "échoué ❌";
-                                    circleInner.style.borderColor = "#FF0000";
-                                    circleInner.style.boxShadow = "0 0 20px rgba(255, 0, 0, 0.5)";
-                                    circleInner.style.color = "#FF5555";
-                                }
-
-                                multiplierElement.classList.add("pulse");
-
-                                setTimeout(() => {
-                                    generateButton.disabled = false;
-                                    buttonDisabled = false;
-
-                                    setTimeout(() => {
-                                        multiplierElement.classList.remove("pulse");
-                                        circleInner.style.borderColor = "";
-                                        circleInner.style.boxShadow = "";
-                                        circleInner.style.color = "";
-                                        circleInner.style.textShadow = "";
-                                        multiplierElement.textContent = "0.00X";
-                                    }, 3000);
-                                }, 2000);
-                            });
-                    } else if (countdownTime <= 0) {
-                        updateCountdown(0);
-                        const secondsLeft =
-                            60 - currentTime.getSeconds() +
-                            (bettingHours - currentHours) * 3600 +
-                            (bettingMinutes - currentMinutes) * 60;
-
-                        if (secondsLeft > 0) {
-                            document.getElementById("countdown").textContent = `Attente: ${Math.floor(
-                                secondsLeft / 60
-                            )}:${(secondsLeft % 60).toString().padStart(2, "0")}`;
-                        } else {
-                            document.getElementById("countdown").textContent = `Minute en cours...`;
-                        }
-                    } else {
-                        updateCountdown(countdownTime);
-                        countdownTime--;
-                    }
-                }, 1000);
-            }, searchTime);
+                gameArea.classList.remove('active');
+                clearInterval(animationInterval);
+                
+                // Générer l'heure prédite
+                generatePredictedTime();
+                
+            }, 10000);
+            
+        }, 5000);
+    }
+    
+    function animateMultipliers() {
+        let startTime = Date.now();
+        let currentMultiplier = 1.50;
+        const targetMultiplier = (Math.random() * 9 + 1.50); // Entre 1.50 et 10.50
+        const duration = 30000; // 30 secondes
+        
+        // Calculer la chance en fonction du multiplicateur final
+        let chanceValue;
+        if (targetMultiplier >= 7 && targetMultiplier <= 10) {
+            chanceValue = 89; // 89% pour les nombres entre 7 et 10
+        } else {
+            chanceValue = Math.floor(Math.random() * 10) + 90; // 90% à 99% pour les autres
         }
-
-        function updateTime(hours, minutes) {
-            const formattedHours = hours.toString().padStart(2, "0");
-            const formattedMinutes = minutes.toString().padStart(2, "0");
-            document.getElementById("time").textContent = `Temps: ${formattedHours}:${formattedMinutes}`;
-        }
-
-        function updateCountdown(secondsLeft) {
-            const minutesLeft = Math.floor(secondsLeft / 60);
-            const secondsLeftFormatted = secondsLeft % 60;
-            const formattedMinutesLeft = minutesLeft.toString().padStart(2, "0");
-            const formattedSecondsLeft = secondsLeftFormatted.toString().padStart(2, "0");
-            document.getElementById("countdown").textContent = `Nouveau signal dans: ${formattedMinutesLeft}:${formattedSecondsLeft}`;
-
-            if (secondsLeft <= 10 && secondsLeft > 0) {
-                document.getElementById("countdown").style.color = "#ff5555";
-            } else {
-                document.getElementById("countdown").style.color = "";
+        
+        // Mettre à jour la chance
+        document.getElementById('chance').textContent = chanceValue + '%';
+        
+        animationInterval = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            
+            if (elapsed >= duration) {
+                clearInterval(animationInterval);
+                return;
             }
-        }
+            
+            // Calcul de la progression (0 à 1)
+            const progress = elapsed / duration;
+            
+            // Augmentation progressive avec un peu d'aléatoire
+            const baseIncrease = (targetMultiplier - 1.50) * progress;
+            const randomVariation = (Math.random() - 0.5) * 0.1; // Petite variation aléatoire
+            
+            currentMultiplier = Math.max(1.50, Math.min(targetMultiplier, 1.50 + baseIncrease + randomVariation));
+            
+            document.getElementById('multiplier').textContent = `${currentMultiplier.toFixed(2)}X`;
+        }, 100); // Mise à jour toutes les 100ms pour plus de fluidité
+    }
 
-        function createParticles(element) {
-            const rect = element.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+    function generatePredictedTime() {
+        const now = new Date();
+        const randomMinutes = Math.floor(Math.random() * 3) + 1; // 1 à 3 minutes
+        
+        // Calculer l'heure de début (maintenant + minutes aléatoires)
+        const startTime = new Date(now.getTime() + (randomMinutes * 60 * 1000));
+        
+        // Calculer l'heure de fin (première heure + 1 minute)
+        const endTime = new Date(startTime.getTime() + (1 * 60 * 1000));
+        
+        // Stocker l'heure cible
+        targetTime = startTime;
+        
+        // Formater les heures
+        const formatTime = (date) => {
+            return date.toTimeString().slice(0, 8);
+        };
+        
+        // Mettre à jour l'affichage
+        document.getElementById('timeRange').textContent = 
+            `${formatTime(startTime)}-${formatTime(endTime)}`;
+        
+        // Démarrer le compte à rebours
+        startCountdown();
+    }
 
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement("div");
-                particle.classList.add("particle");
-
-                particle.style.left = centerX + "px";
-                particle.style.top = centerY + "px";
-
-                const size = Math.random() * 8 + 2;
-                particle.style.width = size + "px";
-                particle.style.height = size + "px";
-
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 50 + Math.random() * 80;
-                const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance;
-
-                particle.style.setProperty("--tx", tx + "px");
-                particle.style.setProperty("--ty", ty + "px");
-
-                const hue = 260 + Math.random() * 60;
-                particle.style.backgroundColor = `hsl(${hue}, 100%, 70%)`;
-
-                particle.style.animation = `particleAnimation ${1 + Math.random()}s forwards`;
-
-                document.body.appendChild(particle);
-
-                setTimeout(() => {
-                    if (particle.parentNode) {
-                        particle.parentNode.removeChild(particle);
-                    }
-                }, 2000);
+    function startCountdown() {
+        countdownInterval = setInterval(() => {
+            const now = new Date();
+            const timeDiff = targetTime - now;
+            
+            if (timeDiff <= 0) {
+                // Temps écoulé, réactiver le bouton
+                clearInterval(countdownInterval);
+                const btn = document.getElementById('signalBtn');
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                isGenerating = false;
+                
+                document.getElementById('beforeSignal').textContent = '00:00';
+                return;
             }
-        }
-    </script>
+            
+            // Calculer minutes et secondes restantes
+            const minutes = Math.floor(timeDiff / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            
+            const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('beforeSignal').textContent = formattedTime;
+            
+        }, 1000);
+    }
+</script>
+
 </body>
 </html>
