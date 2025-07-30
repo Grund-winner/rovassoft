@@ -10,6 +10,58 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <!-- BOUTON MENU (à droite) -->
+<div class="hamburger" id="hamburger">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
+<!-- MENU LATERAL DROIT -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h3 class="sidebar-title">Menu</h3>
+    <button class="close-sidebar" id="closeSidebar">✕</button>
+  </div>
+  <ul class="sidebar-menu">
+    <li><a href="#" id="modeToggle">🌙 <span id="modeText">Mode Sombre</span></a></li>
+    <li><a href="#" id="piraterBtn">🛠️ Pirater</a></li>
+    <li><a href="https://t.me/ROVASOFFICIEL">❓ Aide</a></li>
+  </ul>
+</div>
+
+<!-- MODAL PIRATER -->
+<div class="modal" id="piraterModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Pirater un Jeu de Crash</h3>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label for="gameName">Nom du jeu</label>
+      <input type="text" id="gameName" placeholder="Ex: Aviator, Crash X">
+    </div>
+
+    <div class="form-group">
+      <label>3 derniers coefficients</label>
+      <div class="coefficients-grid">
+        <input type="number" id="coeff1" placeholder="1.25" step="0.01">
+        <input type="number" id="coeff2" placeholder="2.50" step="0.01">
+        <input type="number" id="coeff3" placeholder="1.80" step="0.01">
+      </div>
+    </div>
+
+    <button class="predict-btn" id="predictBtn">Prédire la cote</button>
+
+    <div class="prediction-result" id="predictionResult" style="display: none;">
+      <div class="prediction-coefficient" id="predictedCoeff">-</div>
+      <div class="prediction-time" id="predictedTime">-</div>
+    </div>
+  </div>
+</div>
+
+
   <div class="wrapper">
     <header class="header">
       <img class="gamepad-bg" src="gamepad-bg.webp" alt="gamepad-bg" />
@@ -111,5 +163,46 @@
 
     </div>
   </div>
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const piraterBtn = document.getElementById('piraterBtn');
+    const piraterModal = document.getElementById('piraterModal');
+    const modalClose = document.getElementById('modalClose');
+  
+    hamburger.addEventListener('click', () => {
+      sidebar.classList.add('open');
+    });
+  
+    closeSidebar.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+    });
+  
+    piraterBtn.addEventListener('click', () => {
+      piraterModal.style.display = 'flex';
+      sidebar.classList.remove('open');
+    });
+  
+    modalClose.addEventListener('click', () => {
+      piraterModal.style.display = 'none';
+    });
+  
+    window.addEventListener('click', (e) => {
+      if (e.target === piraterModal) {
+        piraterModal.style.display = 'none';
+      }
+    });
+  
+    document.getElementById('predictBtn').addEventListener('click', () => {
+      const coeff = (Math.random() * 5 + 1).toFixed(2);
+      document.getElementById('predictedCoeff').textContent = coeff;
+      document.getElementById('predictedTime').textContent = `Dans ${Math.floor(Math.random() * 60)} secondes`;
+      document.getElementById('predictionResult').style.display = 'block';
+    });
+  </script>
+  
+  
 </body>
+
 </html>
